@@ -36,10 +36,8 @@ public abstract class User {
             setName(nameInput);
             setPassword(passwordInput);
             setRole(roleInput);
-            System.out.println("input successfully!");
             return true;
         }else{
-            System.out.println("input failed!");
             return false;
         }
     }
@@ -52,11 +50,17 @@ public abstract class User {
 
     public User(String nameInput, String passwordInput, String roleInput){
         if(setter(nameInput,passwordInput,roleInput)){
-            getter();
         }else{
             System.out.println("User init failed!");
         }
     }
+
+    /*public User(String nameInput, String passwordInput, String roleInput){
+         while(!setter(nameInput,passwordInput,roleInput)){
+             System.out.println("I'm afraid you input a null name or password!");
+
+         }
+    }*/
 
     public abstract void showMenu();
 

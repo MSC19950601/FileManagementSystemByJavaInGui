@@ -10,7 +10,11 @@ class Administrator extends User{
     }
 
     public void showMenu(){
-        super.getter();
+        System.out.println("Welcome my Administrator!");
+        System.out.println("The Administrator's functions are in the list:\n"+
+        "1 changeUserInfo;\n"+"2 delUser;\n"+"3 addUser;\n"+"4 listUser;\n");
+
+        
     }
 
     /*public boolean changeUserInfo(){

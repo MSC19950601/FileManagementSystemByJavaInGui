@@ -10,7 +10,9 @@ class Operator extends User{
     }
 
     public void showMenu(){
-        super.getter();
+        System.out.println("Welcome my Operator!");
+        System.out.println("The Operator's functions are in the list:\n"+
+                "1 uploadFile;\n"+"2 downloadFile;\n"+"3 showFileList;\n");
     }
 
     /*public boolean uploadFile(){

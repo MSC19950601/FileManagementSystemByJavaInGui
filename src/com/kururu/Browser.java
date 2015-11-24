@@ -10,7 +10,9 @@ class Browser extends User{
     }
 
     public void showMenu(){
-        super.getter();
+        System.out.println("Welcome my Browser!");
+        System.out.println("The Browser's functions are in the list:\n"+
+                "1 downloadFile;\n"+"2 showFileList;\n");
     }
     /*public boolean downloadFile(){
 
