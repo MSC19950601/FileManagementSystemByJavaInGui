@@ -7,22 +7,23 @@ public class Main {
     static String loginName;
     static String loginPassword;
 
-    static String RegesterName;
-    static String RegesterPassword;
-    static String RegesterRole;
+    //static String RegesterName;
+    //static String RegesterPassword;
+    //static String RegesterRole;
 
     static User loginUser;
 
     public static void main(String[] args) {
 
+        //SystemFrame test = new SystemFrame();
         Scanner jaclin = new Scanner(System.in);
 
         System.out.println("Welcome back to system!");
         mainPanel:
         while(true){
             System.out.println("1 LOGIN");
-            System.out.println("2 REGISTER");
-            System.out.println("3 QUIT");
+            //System.out.println("2 REGISTER");
+            System.out.println("2 QUIT");
 
             int mainChoice = jaclin.nextInt();
             switch (mainChoice){
@@ -32,12 +33,30 @@ public class Main {
                     System.out.println("Please input your password:");
                     loginPassword = jaclin.next();
                     loginUser = DataProcessing.search(loginName, loginPassword);
-                    System.out.println("Welcome!"+"\n"+loginUser.getName()+"\n"+"Your role is "+loginUser.getRole());
+                    int w = 0;
+                    while(true) {
+                        try {
+                            if(w > 5){
+                                System.out.println("fucking bitch!");
+                                break mainPanel;
+                            }
+                            System.out.println("Welcome!" + "\n" + loginUser.getName() + "\n" + "Your role is " + loginUser.getRole());
+                            break;
+                        } catch (NullPointerException e) {
+                            w++;
+                            System.out.println("name or password wrong!\nPlease input again!");
+                            System.out.println("Please input your name:");
+                            loginName = jaclin.next();
+                            System.out.println("Please input your password:");
+                            loginPassword = jaclin.next();
+                            loginUser = DataProcessing.search(loginName, loginPassword);
+                        }
+                    }
                     loginUser.showMenu();
                     break mainPanel;
                 }
 
-                case 2:{
+                /*case 2:{
                     System.out.println("Please input your name:");
                     RegesterName = jaclin.next();
                     System.out.println("Please input your password:");
@@ -50,9 +69,9 @@ public class Main {
                         System.out.println("register failed!");
                     }
                     break mainPanel;
-                }
+                }*/
 
-                case 3:{
+                case 2:{
                     System.exit(0);
                 }
             }

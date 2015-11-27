@@ -11,7 +11,6 @@ class Administrator extends User{
     static int menuNum;
 
     static String
-            test,
             changeName,changePassword,changeRole,
             delName,
             addName,addPassword,addRole;

@@ -1,10 +1,12 @@
 package com.kururu;
 import java.util.*;
 import java.lang.*;
+import java.util.Scanner;
 /**
  * Created by kururu on 2015/11/18.
  */
 public class DataProcessing {
+
     static Hashtable<String, User> users;
 
     static{

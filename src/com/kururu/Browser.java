@@ -1,5 +1,7 @@
 package com.kururu;
 
+import java.io.FileNotFoundException;
+import java.nio.file.FileSystemNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -43,12 +45,12 @@ class Browser extends User{
         }
 
     }
-    public boolean downloadFile(){
+    public boolean downloadFile() /*throws FileNotFoundException*/ {
         System.out.println("downloadFile");
         return true;
     }
 
-    public void showFileList(){
+    public void showFileList() /*throws FileNotFoundException*/{
         System.out.println("showFileList");
     }
 

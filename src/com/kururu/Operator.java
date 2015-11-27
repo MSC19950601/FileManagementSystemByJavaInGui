@@ -1,5 +1,6 @@
 package com.kururu;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -55,12 +56,12 @@ class Operator extends User{
 
     }
 
-    public boolean uploadFile(){
+    public boolean uploadFile() /*throws FileNotFoundException*/{
         System.out.println("uploadFile");
         return true;
     }
 
-    public boolean downlaodFile(){
+    public boolean downlaodFile() /*throws FileNotFoundException*/{
         System.out.println("downloadFile");
         return true;
     }
