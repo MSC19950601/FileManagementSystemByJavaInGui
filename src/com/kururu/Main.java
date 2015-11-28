@@ -16,6 +16,7 @@ public class Main {
     public static void main(String[] args) {
 
         //SystemFrame test = new SystemFrame();
+        LoginFrame test2 = new LoginFrame();
         Scanner jaclin = new Scanner(System.in);
 
         System.out.println("Welcome back to system!");
