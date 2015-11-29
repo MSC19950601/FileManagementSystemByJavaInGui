@@ -1,16 +1,21 @@
 package com.kururu;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by kururu on 2015/11/28.
  */
-public class LoginFrame extends JFrame /*implements ActionListener*/{
+public class LoginFrame extends JFrame {
 
+    static String loginName;
+    static String loginPassword;
+    static User loginUser;
     static JFrame mainFrame;
     static JLabel mainPanelBackground,
     nameLabel,passwordLabel;
@@ -20,10 +25,12 @@ public class LoginFrame extends JFrame /*implements ActionListener*/{
     static JMenuItem quitItem,
             serverItem,
             aboutItem;
+    static JButton loginButton,resetButton;
 
     static ImageIcon mainBackground,
                      welcomeImage,
-                     nameLabelBackground, passwordLabelBackground;
+                     nameLabelBackground, passwordLabelBackground,
+                     nameButtonBackground,resetButtonBackground;
 
     static JTextField nameField;//set login name textfield component
 
@@ -39,7 +46,7 @@ public class LoginFrame extends JFrame /*implements ActionListener*/{
     }
 
     public void mainInitial() throws Exception{
-        mainFrame = new JFrame("档案管理系统");
+        mainFrame = new JFrame("��������ϵͳ");
 
         mainBackground = new ImageIcon("Icon/loginBackground.jpg");
         mainPanelBackground = new JLabel(mainBackground);
@@ -56,11 +63,14 @@ public class LoginFrame extends JFrame /*implements ActionListener*/{
         setMainMenu();
         setField();
         setLabel();
+        setButton();
 
         mainPanel.add(nameField);
         mainPanel.add(passwordField);
         mainFrame.add(nameLabel);
         mainFrame.add(passwordLabel);
+        mainFrame.add(loginButton);
+        mainFrame.add(resetButton);
 
         mainFrame.setLocation(300, 300);
         mainFrame.setResizable(false);
@@ -103,7 +113,7 @@ public class LoginFrame extends JFrame /*implements ActionListener*/{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource() == serverItem){
-                    JOptionPane.showMessageDialog(null, "Tips: server untapped！","scientific",JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Tips: server untapped","scientific",JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
@@ -147,7 +157,7 @@ public class LoginFrame extends JFrame /*implements ActionListener*/{
                 mainBackground.getIconHeight() / 3,
                 mainBackground.getIconWidth() / 5,
                 mainBackground.getIconHeight() / 15);
-        nameLabel.setFont(new java.awt.Font("Consolas", 1, 25));
+        nameLabel.setFont(new Font("Consolas", 0x1, 25));
         nameLabel.setBackground(Color.BLACK);
         //nameLabelBackground = new ImageIcon("Icon/")
         //nameLabel.setIcon();
@@ -158,11 +168,95 @@ public class LoginFrame extends JFrame /*implements ActionListener*/{
                 mainBackground.getIconWidth()/5,
                 mainBackground.getIconHeight()/15
         );
-        passwordLabel.setFont(new java.awt.Font("Consolas", 1, 25));
+        passwordLabel.setFont(new Font("Consolas", 1, 25));
 
     }
 
-    //public void actionPerformed(ActionEvent e){
+    public void setButton(){
+        nameButtonBackground = new ImageIcon("Icon/nameButtonBackground.png");
+        loginButton = new JButton("login",nameButtonBackground);
+        loginButton.setUI(new BasicButtonUI());
+        loginButton.setBounds(
+                mainBackground.getIconWidth() / 5,
+                3*mainBackground.getIconHeight() / 5,
+                nameButtonBackground.getIconWidth()*4,
+                3*nameButtonBackground.getIconHeight()/2);
+        loginButton.setContentAreaFilled(false);
+        loginButton.setFont(new Font("Consolas", 1, 25));
+        loginButton.setMargin(new Insets(0, 0, 0, 0));
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginName = nameField.getText();
+                loginPassword = new String(passwordField.getPassword());
+                loginUser = DataProcessing.search(loginName,loginPassword);
+                //System.out.println(loginName+"\n"+passwordField.getPassword()+"\n"+loginPassword);
+                if(loginName.equals("")){
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "LOGIN name can't be empty", "error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }else if(loginPassword.equals("")){
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "LOGIN password can't be empty", "error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }else if(loginUser != null){
+                    loginUser.showMenu();
+                    return;
+                }else{
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "name or password is wrong!", "error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
-    //}
+        resetButtonBackground = new ImageIcon("Icon/resetButtonBackground.png");
+        resetButton = new JButton("reset",resetButtonBackground);
+        resetButton.setUI(new BasicButtonUI());
+        resetButton.setBounds(
+                4*mainBackground.getIconWidth() / 7,
+                3*mainBackground.getIconHeight() / 5,
+                nameButtonBackground.getIconWidth()*4,
+                3*nameButtonBackground.getIconHeight()/2);
+        resetButton.setContentAreaFilled(false);
+        resetButton.setFont(new Font("Consolas", 0x1, 25));
+        resetButton.setMargin(new Insets(0, 0, 0, 0));
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nameField.setText("");
+                passwordField.setText("");
+            }
+        });
+    }
+
+    /*@Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == resetButton){
+            nameField.setText("");
+            passwordField.setText("");
+        }
+        if(e.getSource() == loginButton){
+            loginName = nameField.getText();
+            loginPassword = Arrays.toString(passwordField.getPassword());
+            if(loginName.equals("")){
+                JOptionPane.showMessageDialog(null, "账号不能为空", "����", JOptionPane.ERROR_MESSAGE);
+            }else{
+                if(loginPassword.equals("")){
+                    JOptionPane.showMessageDialog(null, "密码不能为空", "错误", JOptionPane.ERROR_MESSAGE);
+                }else{
+                    loginUser = DataProcessing.search(loginName,loginPassword);
+                    if(loginUser == null){
+                        JOptionPane.showMessageDialog(null, "密码错误�?", "错误", JOptionPane.ERROR_MESSAGE);
+                    }else
+                        loginUser.showMenu();
+                }
+            }
+        }
+    }*/
 }
