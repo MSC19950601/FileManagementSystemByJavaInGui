@@ -17,6 +17,8 @@ public class Main {
 
         //SystemFrame test = new SystemFrame();
         LoginFrame test2 = new LoginFrame();
+        //LoginJFrameTest test3 = new LoginJFrameTest();
+        //test3.showMe();
         Scanner jaclin = new Scanner(System.in);
 
         System.out.println("Welcome back to system!");
