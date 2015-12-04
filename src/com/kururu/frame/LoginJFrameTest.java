@@ -1,4 +1,4 @@
-package com.kururu;
+package com.kururu.frame;
 
 /**
  * Created by kururu on 2015/11/28.

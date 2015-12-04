@@ -1,19 +1,32 @@
-package com.kururu;
+package com.kururu.frame;
 
-import com.sun.java.accessibility.util.SwingEventMonitor;
+import com.kururu.basement.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Console;
+import java.util.Arrays;
 
 /**
  * Created by kururu on 2015/11/25.
  */
 public class SystemFrame extends JFrame implements ActionListener{
 
-    static JPanel namePanel,passwordPanel,buttonPanel;
+    static String loginName;
+    static String loginPassword;
+
+    static User loginUser;
+
+    static Dimension screenSize;
+
+    static ImageIcon welcomeImage;
+
+    static JPanel
+            mainPanel,
+            welcomePanel,
+            fieldPanel,namePanel,passwordPanel,
+            buttonPanel;
 
     static JMenuBar mainMenu;
 
@@ -21,18 +34,19 @@ public class SystemFrame extends JFrame implements ActionListener{
 
     static JMenuItem
             quitItem,
-            seryerItem,
+            serverItem,
             aboutItem;
 
-    static JButton loginButton,quitButton;
+    static JButton loginButton,resetButton;
 
-    static JLabel nameLabel,passwordLabel;
+    static JLabel welcomeLabel,
+                  nameLabel,passwordLabel;
 
     static JTextField nameField;//set login name textfield component
 
     static JPasswordField passwordField;//set login password textfield component
 
-    public SystemFrame(String loginName,String loginPaeeword){
+    public SystemFrame(){
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
         try{
            mainInitial();
@@ -41,34 +55,41 @@ public class SystemFrame extends JFrame implements ActionListener{
         }
     }
 
-    private void mainInitial(String loginName,String loginPaeeword) throws Exception{
+    private void mainInitial() throws Exception{
 
-        //mainPanel = (JPanel)this.getContentPane();
-        //mainPanel.setLayout(null);
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        screenSize = kit.getScreenSize();
 
         this.setTitle("档案管理系统");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500, 400);
+        //this.setSize(500, 400);
+        //this.setSize(screenSize.width/2,screenSize.height/2);
+        this.setSize(500,400);
+        this.setLocation(500,500);
         this.setResizable(false);
-        //this.setLayout(new GridLayout(3,1));
-        this.setLayout(new GridLayout(4,1));
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        this.add(mainPanel);
 
         setMainMenu();
         setField();
         setLabel();
         setButton();
-        setPanel();
+        setOtherPanel();
 
-        this.add(mainMenu);
-        this.add(namePanel);
-        this.add(passwordPanel);
-        this.add(buttonPanel);
+        this.setJMenuBar(mainMenu);
+        mainPanel.add("North",welcomePanel);
+        mainPanel.add("Center",fieldPanel);
+        mainPanel.add("South",buttonPanel);
 
         this.setVisible(true);
     }
+
     // menuSetting funcs
     public void setMainMenu(){
+
         mainMenu = new JMenuBar();
+
         setFileMenu();
         setWorkMenu();
         setHelpMenu();
@@ -80,8 +101,6 @@ public class SystemFrame extends JFrame implements ActionListener{
 
     public void setFileMenu(){
         fileMenu = new JMenu("file");
-        fileMenu.setFont(new java.awt.Font("Arial",0,15));
-        fileMenu.setForeground(Color.black);
 
         quitItem = new JMenuItem("quit");
         fileMenu.add(quitItem);
@@ -97,26 +116,22 @@ public class SystemFrame extends JFrame implements ActionListener{
 
     public void setWorkMenu(){
         workMenu = new JMenu("work");
-        workMenu.setFont(new java.awt.Font("Console",0,15));
-        workMenu.setForeground(Color.black);
 
-        seryerItem = new JMenuItem("server");
-        workMenu.add(seryerItem);
-        seryerItem.addActionListener(new ActionListener() {
+        serverItem = new JMenuItem("server");
+        workMenu.add(serverItem);
+        serverItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getSource() == seryerItem){
+                if(e.getSource() == serverItem){
                     JOptionPane.showMessageDialog(null, "Tips: server untapped！","scientific",JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
-        workMenu.add(seryerItem);
+        workMenu.add(serverItem);
 }
 
     public void setHelpMenu(){
         helpMenu = new JMenu("help");
-        helpMenu.setFont(new java.awt.Font("Dialog",0,15));
-        helpMenu.setForeground(Color.black);
 
         aboutItem = new JMenuItem("about");
         helpMenu.add(aboutItem);
@@ -132,26 +147,37 @@ public class SystemFrame extends JFrame implements ActionListener{
 
     //fieldSetting func
     public void setField(){
-        nameField = new JTextField(15);
-        passwordField = new JPasswordField(15);
+        nameField = new JTextField(20);
+        passwordField = new JPasswordField(20);
+        if(!passwordField.echoCharIsSet()){
+            passwordField.setEchoChar('*');
+        }
     }
 
     //labelSetting func
     public void setLabel(){
         nameLabel = new JLabel("name");
         passwordLabel = new JLabel("password");
+
+        welcomeImage = new ImageIcon("loginBackground.jpg");
+        welcomeLabel = new JLabel(welcomeImage);
+        welcomeLabel.setBounds(0,0,welcomeImage.getIconWidth(),welcomeImage.getIconHeight());
+
     }
 
     //buttonSetting fun
     public void setButton(){
         loginButton = new JButton("login");
         loginButton.addActionListener(this);
-        quitButton = new JButton("quits");
-        quitButton.addActionListener(this);
+        resetButton = new JButton("reset");
+        resetButton.addActionListener(this);
     }
 
+
     //panelSetting func
-    public void setPanel(){
+    public void setOtherPanel(){
+        welcomePanel = new JPanel();
+        fieldPanel = new JPanel();
         namePanel = new JPanel();
         passwordPanel = new JPanel();
         buttonPanel = new JPanel();
@@ -162,14 +188,38 @@ public class SystemFrame extends JFrame implements ActionListener{
         passwordPanel.add(passwordLabel);
         passwordPanel.add(passwordField);
 
+        fieldPanel.add(namePanel);
+        fieldPanel.add(passwordPanel);
+
+        welcomePanel.setOpaque(false);
+        welcomePanel.add(welcomeLabel);
+
         buttonPanel.add(loginButton);
-        buttonPanel.add(quitButton);
+        buttonPanel.add(resetButton);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == quitButton){
-            System.exit(0);
+        if(e.getSource() == resetButton){
+            nameField.setText("");
+            passwordField.setText("");
+        }
+        if(e.getSource() == loginButton){
+            loginName = nameField.getText();
+            loginPassword = Arrays.toString(passwordField.getPassword());
+            if(loginName.equals("")){
+                JOptionPane.showMessageDialog(null, "账号不能为空", "错误", JOptionPane.ERROR_MESSAGE);
+            }else{
+                if(loginPassword.equals("")){
+                    JOptionPane.showMessageDialog(null, "密码不能为空", "错误", JOptionPane.ERROR_MESSAGE);
+                }else{
+                    //loginUser = DataProcessing.search(loginName,loginPassword);
+                    if(loginUser == null){
+                        JOptionPane.showMessageDialog(null, "密码错误！", "错误", JOptionPane.ERROR_MESSAGE);
+                    }else
+                        loginUser.showMenu();
+                }
+            }
         }
     }
 }

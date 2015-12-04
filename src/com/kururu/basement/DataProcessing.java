@@ -1,9 +1,9 @@
-package com.kururu;
+package com.kururu.basement;
 
 import java.util.*;
 import java.lang.*;
 import java.sql.*;
-import java.util.Scanner;
+
 /**
  * Created by kururu on 2015/11/18.
  */

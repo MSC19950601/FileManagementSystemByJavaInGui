@@ -1,11 +1,7 @@
-package com.kururu;
+package com.kururu.basement;
 
 import java.io.*;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by kururu on 2015/12/2.

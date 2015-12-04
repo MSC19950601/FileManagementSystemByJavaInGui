@@ -1,4 +1,4 @@
-package com.kururu;
+package com.kururu.basement;
 
 import java.sql.Timestamp;
 

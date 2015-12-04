@@ -1,40 +1,42 @@
-package com.kururu;
+package com.kururu.frame;
+
+import com.kururu.basement.DataProcessing;
+import com.kururu.basement.User;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.SQLException;
 
 /**
  * Created by kururu on 2015/11/28.
  */
 public class LoginFrame extends JFrame {
 
-    static String loginName;
-    static String loginPassword;
-    static User loginUser;
-    static JFrame mainFrame;
-    static JLabel mainPanelBackground,
+    public static String loginName;
+    public static String loginPassword;
+    public static User loginUser;
+    public static JFrame mainFrame;
+    public static JLabel mainPanelBackground,
     nameLabel,passwordLabel;
-    static JPanel mainPanel;
-    static JMenuBar mainMenu;
-    static JMenu fileMenu,workMenu,helpMenu;
-    static JMenuItem quitItem,
+    public static JPanel mainPanel;
+    public static JMenuBar mainMenu;
+    public static JMenu fileMenu,workMenu,helpMenu;
+    public static JMenuItem quitItem,
             serverItem,
             aboutItem;
-    static JButton loginButton,resetButton;
+    public static JButton loginButton,resetButton;
 
-    static ImageIcon mainBackground,
+    public static ImageIcon mainBackground,
                      welcomeImage,
                      nameLabelBackground, passwordLabelBackground,
                      nameButtonBackground,resetButtonBackground;
 
-    static JTextField nameField;//set login name textfield component
+    public static JTextField nameField;//set login name textfield component
 
-    static JPasswordField passwordField;//set login password textfield component
+    public static JPasswordField passwordField;//set login password textfield component
 
     public LoginFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -138,10 +140,12 @@ public class LoginFrame extends JFrame {
     public void setField(){
         nameField = new JTextField(20);
         passwordField = new JPasswordField(20);
-        nameField.setBounds(mainBackground.getIconWidth()/2,
-                mainBackground.getIconHeight()/3,
-                mainBackground.getIconWidth()/5,
-                mainBackground.getIconHeight()/15);
+        nameField.setFont(new Font("Consolas", 0x1, 20));
+        passwordField.setFont(new Font("Consolas", 0x1, 20));
+        nameField.setBounds(mainBackground.getIconWidth() / 2,
+                mainBackground.getIconHeight() / 3,
+                mainBackground.getIconWidth() / 5,
+                mainBackground.getIconHeight() / 15);
         passwordField.setBounds(mainBackground.getIconWidth()/2,
                 mainBackground.getIconHeight()/3 + mainBackground.getIconHeight()/13,
                 mainBackground.getIconWidth()/5,
@@ -189,28 +193,54 @@ public class LoginFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 loginName = nameField.getText();
                 loginPassword = new String(passwordField.getPassword());
-                loginUser = DataProcessing.search(loginName,loginPassword);
-                //System.out.println(loginName+"\n"+passwordField.getPassword()+"\n"+loginPassword);
-                if(loginName.equals("")){
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "LOGIN name can't be empty", "error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }else if(loginPassword.equals("")){
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "LOGIN password can't be empty", "error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }else if(loginUser != null){
-                    loginUser.showMenu();
-                    return;
-                }else{
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "name or password is wrong!", "error",
-                            JOptionPane.ERROR_MESSAGE);
+                try{
+                    loginUser = DataProcessing.searchUser(loginName, loginPassword);
+                }catch(SQLException SQLExceptionInLoginFrame){
+                    SQLExceptionInLoginFrame.printStackTrace();
+                }catch (IllegalStateException IllegalStateExceptionInLoginFrame){
+                    IllegalStateExceptionInLoginFrame.printStackTrace();
+                }finally {
+                    if(loginName.equals("")){
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "LOGIN name can't be empty", "error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }else if(loginPassword.equals("")){
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "LOGIN password can't be empty", "error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }else if(loginUser != null){
+                        if(loginUser.getRole().equals("administrator")){
+                            JOptionPane.showMessageDialog(null,
+                                    "Welcome back Administrator!" +  " " + loginUser.getName() +"\n" + "Thank you for use!",
+                                    "LOGIN successfully!",
+                                    JOptionPane.PLAIN_MESSAGE);
+                            mainFrame.dispose();
+                            new AdministratorFrame();
+                        }else if(loginUser.getRole().equals("operator")){
+                            JOptionPane.showMessageDialog(null,
+                                    "Welcome back Operator!" +  " " + loginUser.getName() +"\n" + "Thank you for use!",
+                                    "LOGIN successfully!",
+                                    JOptionPane.PLAIN_MESSAGE);
+                            mainFrame.dispose();
+                            new OperatorFrame();
+                        }else{
+                            JOptionPane.showMessageDialog(null,
+                                    "Welcome back Browser!" +  " " + loginUser.getName() +"\n" + "Thank you for use!",
+                                    "LOGIN successfully!",
+                                    JOptionPane.PLAIN_MESSAGE);
+                            mainFrame.dispose();
+                            new BrowserFrame();
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "name or password is wrong!", "error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -234,29 +264,4 @@ public class LoginFrame extends JFrame {
             }
         });
     }
-
-    /*@Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == resetButton){
-            nameField.setText("");
-            passwordField.setText("");
-        }
-        if(e.getSource() == loginButton){
-            loginName = nameField.getText();
-            loginPassword = Arrays.toString(passwordField.getPassword());
-            if(loginName.equals("")){
-                JOptionPane.showMessageDialog(null, "账号不能为空", "����", JOptionPane.ERROR_MESSAGE);
-            }else{
-                if(loginPassword.equals("")){
-                    JOptionPane.showMessageDialog(null, "密码不能为空", "错误", JOptionPane.ERROR_MESSAGE);
-                }else{
-                    loginUser = DataProcessing.search(loginName,loginPassword);
-                    if(loginUser == null){
-                        JOptionPane.showMessageDialog(null, "密码错误�?", "错误", JOptionPane.ERROR_MESSAGE);
-                    }else
-                        loginUser.showMenu();
-                }
-            }
-        }
-    }*/
 }

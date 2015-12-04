@@ -1,4 +1,4 @@
-package com.kururu;
+package com.kururu.basement;
 
 import java.io.*;
 import java.io.File;
@@ -126,11 +126,11 @@ class Operator extends User{
             return false;
         }*/
 
-        File destiantionFile = new File(uploadFileDestinationPath);
+        File destinationFile = new File(uploadFileDestinationPath);
 
-        if(!destiantionFile.exists()){
+        if(!destinationFile.exists()){
             System.out.println("destinationFile file doesn't exist!");
-            if(destiantionFile.createNewFile()){
+            if(destinationFile.createNewFile()){
                 System.out.println("destinationFile file has been built!");
             }
         }
@@ -145,7 +145,7 @@ class Operator extends User{
         try {
 
             inStream = new FileInputStream(sourceFile);
-            outStream = new FileOutputStream(destiantionFile);
+            outStream = new FileOutputStream(destinationFile);
 
             inChannel  = inStream.getChannel();
             outChannel  = outStream.getChannel();

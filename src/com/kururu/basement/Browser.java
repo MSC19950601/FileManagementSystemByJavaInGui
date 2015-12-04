@@ -1,15 +1,16 @@
-package com.kururu;
+package com.kururu.basement;
 
-import java.io.FileNotFoundException;
-import java.nio.file.FileSystemNotFoundException;
 import java.util.Scanner;
 
 /**
  * Created by kururu on 2015/11/18.
  */
 class Browser extends User{
+    //add on 20151202
+    public String docNum;
+    public Doc docTest;
 
-    static int menuNum;
+    public static int menuNum;
 
     Scanner jaclinForBro = new Scanner(System.in);
 
@@ -40,7 +41,11 @@ class Browser extends User{
             }
             //Show func
             case 2:{
-                showFileList();
+                try{
+                    showFileList();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -50,8 +55,11 @@ class Browser extends User{
         return true;
     }
 
-    public void showFileList() /*throws FileNotFoundException*/{
-        System.out.println("showFileList");
+    public void showFileList() throws Exception{
+        System.out.println("Func:showFileList");
+        System.out.println("Please input your docNum");
+        docNum = jaclinForBro.next();
+        docTest = DataProcessing.searchDoc(docNum);
     }
 
 }

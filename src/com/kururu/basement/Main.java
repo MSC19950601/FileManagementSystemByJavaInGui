@@ -1,25 +1,27 @@
-package com.kururu;
+package com.kururu.basement;
+import com.kururu.frame.LoginFrame;
+
 import java.lang.*;
 import java.util.Scanner;
 
 public class Main {
 
-    static String loginName;
-    static String loginPassword;
+    public static String loginName;
+    public static String loginPassword;
 
     //static String RegesterName;
     //static String RegesterPassword;
     //static String RegesterRole;
 
-    static User loginUser;
+    public static User loginUser;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
 
         //SystemFrame test = new SystemFrame();
         LoginFrame test2 = new LoginFrame();
         //LoginJFrameTest test3 = new LoginJFrameTest();
         //test3.showMe();
-        Scanner jaclin = new Scanner(System.in);
+        /*Scanner jaclin = new Scanner(System.in);
 
         System.out.println("Welcome back to system!");
         mainPanel:
@@ -35,7 +37,7 @@ public class Main {
                     loginName = jaclin.next();
                     System.out.println("Please input your password:");
                     loginPassword = jaclin.next();
-                    loginUser = DataProcessing.search(loginName, loginPassword);
+                    loginUser = DataProcessing.searchUser(loginName, loginPassword);
                     int w = 0;
                     while(true) {
                         try {
@@ -52,7 +54,7 @@ public class Main {
                             loginName = jaclin.next();
                             System.out.println("Please input your password:");
                             loginPassword = jaclin.next();
-                            loginUser = DataProcessing.search(loginName, loginPassword);
+                            //loginUser = DataProcessing.search(loginName, loginPassword);
                         }
                     }
                     loginUser.showMenu();
@@ -74,11 +76,11 @@ public class Main {
                     break mainPanel;
                 }*/
 
-                case 2:{
+                /*case 2:{
                     System.exit(0);
                 }
             }
-        }
+        }*/
 
         //User testUser1 = new Browser("msc1","258","Browser");
         //testUser1.showMenu();

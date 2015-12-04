@@ -1,4 +1,4 @@
-package com.kururu;
+package com.kururu.basement;
 import java.util.*;
 /**
  * Created by kururu on 2015/11/18.

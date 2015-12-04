@@ -1,6 +1,6 @@
-package com.kururu;
+package com.kururu.frame;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+import com.kururu.basement.User;
 
 import javax.swing.*;
 import java.awt.*;

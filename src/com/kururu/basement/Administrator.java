@@ -1,6 +1,5 @@
-package com.kururu;
+package com.kururu.basement;
 
-import java.util.Enumeration;
 import java.util.Scanner;
 
 /**
@@ -10,10 +9,12 @@ class Administrator extends User{
 
     static int menuNum;
 
-    static String
-            changeName,changePassword,changeRole,
-            delName,
-            addName,addPassword,addRole;
+    private static String changePassword;
+    private static String changeRole;
+    private static String delName;
+    private static String addName;
+    private static String addPassword;
+    private static String addRole;
 
     Scanner jaclinForAdmini = new Scanner(System.in);
 
@@ -72,18 +73,20 @@ class Administrator extends User{
 
     public boolean changeUserInfo(){
         System.out.println("Please input changed name:");
-        changeName = jaclinForAdmini.next();
+        String changeName = jaclinForAdmini.next();
         System.out.println("Please input changed password:");
         changePassword = jaclinForAdmini.next();
         System.out.println("Please input changed role:");
         changeRole = jaclinForAdmini.next();
-        return DataProcessing.update(changeName,changePassword,changeRole);
+        //return DataProcessing.update(changeName,changePassword,changeRole);
+        return true;
     }
 
     public boolean delUser(){
         System.out.println("Please input deleted name:");
         delName = jaclinForAdmini.next();
-        return DataProcessing.delete(delName);
+        //return DataProcessing.delete(delName);
+        return true;
     }
 
     public boolean addUser(){
@@ -93,12 +96,13 @@ class Administrator extends User{
         addPassword = jaclinForAdmini.next();
         System.out.println("Please input added role:");
         addRole = jaclinForAdmini.next();
-        return DataProcessing.insert(addName,addPassword,addRole);
+        //return DataProcessing.insert(addName,addPassword,addRole);
+        return true;
 
     }
 
     public void listUser(){
-        DataProcessing.getAllUser();
+        //DataProcessing.getAllUser();
     }
 
 }
