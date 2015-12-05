@@ -9,20 +9,28 @@ import java.awt.event.ActionListener;
  * Created by kururu on 2015/12/4.
  */
 public class OperatorFrame extends JFrame{
-    public static JFrame OpeMainFrame;
-    public static JLabel OpeMainPanelBackground;
-    public static JPanel OpeMainPanel;
-    public static JMenuBar OpeMainMenu;
-    public static JMenu OpeFileMenu,OpeWorkMenu,OpeHelpMenu;
-    public static JMenuItem OpeQuitItem,
+    public JFrame OpeMainFrame;
+    public JLabel OpeMainPanelBackground;
+    public JPanel OpeMainPanel;
+    public JMenuBar OpeMainMenu;
+    public JMenu 
+            OpeFileMenu,
+            OpeWorkMenu,
+            OpeHelpMenu;
+    public JMenuItem 
+            OpeQuitItem,
             OpeServerItem,
             OpeAboutItem;
 
-    public static ImageIcon OpeMainBackground,
-            welcomeImage,
-            nameLabelBackground, passwordLabelBackground,
-            nameButtonBackground,resetButtonBackground;
+    public ImageIcon OpeMainBackground;
 
+    public JButton
+            uploadFileButton,
+            downloadButton,
+            showFileListButton;
+
+    public JScrollPane listScrollPane;
+    
     public OperatorFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
         try{
@@ -48,6 +56,9 @@ public class OperatorFrame extends JFrame{
         OpeMainFrame.setSize(OpeMainBackground.getIconWidth(), OpeMainBackground.getIconHeight());
 
         setMainMenu();
+        setTable();
+        setButton();
+
 
         OpeMainFrame.setLocation(300, 300);
         OpeMainFrame.setResizable(false);
@@ -109,5 +120,50 @@ public class OperatorFrame extends JFrame{
                 }
             }
         });
+    }
+
+    public void setTable(){
+        listScrollPane = new JScrollPane();
+        listScrollPane.setBounds(
+                OpeMainBackground.getIconWidth()/3,
+                OpeMainBackground.getIconHeight()/10,
+                3*OpeMainBackground.getIconWidth()/5,
+                OpeMainBackground.getIconHeight()/10 + 4*OpeMainBackground.getIconHeight()/7);
+        OpeMainFrame.add(listScrollPane);
+
+    }
+
+    public void setButton(){
+
+        uploadFileButton = new JButton("uploadFile");
+        //uploadFileButton.setUI(new BasicButtonUI());
+        uploadFileButton.setBounds(
+                OpeMainBackground.getIconWidth()/15,
+                OpeMainBackground.getIconHeight()/10,
+                OpeMainBackground.getIconWidth()/5,
+                OpeMainBackground.getIconHeight()/15);
+        //uploadFileButton.setContentAreaFilled(false);
+        uploadFileButton.setFont(new Font("Consolas", 1, 18));
+        //uploadFileButton.setMargin(new Insets(0, 0, 0, 0));
+
+        downloadButton = new JButton("downloadFile");
+        downloadButton.setBounds(
+                OpeMainBackground.getIconWidth()/15,
+                OpeMainBackground.getIconHeight()/10 + OpeMainBackground.getIconHeight()/5,
+                OpeMainBackground.getIconWidth()/5,
+                OpeMainBackground.getIconHeight()/15);
+        downloadButton.setFont(new Font("Consolas", 1, 18));
+
+        showFileListButton = new JButton("showFileList");
+        showFileListButton.setBounds(
+                OpeMainBackground.getIconWidth()/15,
+                OpeMainBackground.getIconHeight()/10 + 2*OpeMainBackground.getIconHeight()/5,
+                OpeMainBackground.getIconWidth()/5,
+                OpeMainBackground.getIconHeight()/15);
+        showFileListButton.setFont(new Font("Consolas", 1, 18));
+
+        OpeMainFrame.add(uploadFileButton);
+        OpeMainFrame.add(downloadButton);
+        OpeMainFrame.add(showFileListButton);
     }
 }

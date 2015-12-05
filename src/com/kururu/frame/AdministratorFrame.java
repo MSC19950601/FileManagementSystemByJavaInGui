@@ -1,6 +1,7 @@
 package com.kururu.frame;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,19 +11,29 @@ import java.awt.event.ActionListener;
  */
 public class AdministratorFrame extends JFrame {
 
-    public static JFrame AdminMainFrame;
-    public static JLabel AdminMainPanelBackground;
-    public static JPanel AdminMainPanel;
-    public static JMenuBar AdminMainMenu;
-    public static JMenu AdminFileMenu,AdminWorkMenu,AdminHelpMenu;
-    public static JMenuItem AdminQuitItem,
+    public JFrame AdminMainFrame;
+    public JLabel AdminMainPanelBackground;
+    public JPanel AdminMainPanel;
+    public JMenuBar AdminMainMenu;
+
+    public JMenu
+            AdminFileMenu,
+            AdminWorkMenu,
+            AdminHelpMenu;
+    public JMenuItem
+            AdminQuitItem,
             AdminServerItem,
             AdminAboutItem;
 
-    public static ImageIcon AdminMainBackground,
-            welcomeImage,
-            nameLabelBackground, passwordLabelBackground,
-            nameButtonBackground,resetButtonBackground;
+    public JButton
+            changeUserInfoButton,
+            delUserButton,
+            addUserButton,
+            listUserButton;
+
+    private ImageIcon AdminMainBackground;
+
+    public JScrollPane listScrollPane;
 
     public AdministratorFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -49,12 +60,14 @@ public class AdministratorFrame extends JFrame {
         AdminMainFrame.setSize(AdminMainBackground.getIconWidth(), AdminMainBackground.getIconHeight());
 
         setMainMenu();
+        setButton();
+        setTable();
 
         AdminMainFrame.setLocation(300, 300);
         AdminMainFrame.setResizable(false);
         AdminMainFrame.setVisible(true);
     }
-
+    //set menu
     public void setMainMenu(){
         AdminMainMenu = new JMenuBar();
         setFileMenu();
@@ -111,4 +124,59 @@ public class AdministratorFrame extends JFrame {
             }
         });
     }
+
+    public void setTable(){
+        listScrollPane = new JScrollPane();
+        listScrollPane.setBounds(
+                AdminMainBackground.getIconWidth()/3,
+                AdminMainBackground.getIconHeight()/10,
+                3*AdminMainBackground.getIconWidth()/5,
+                AdminMainBackground.getIconHeight()/10 + 4*AdminMainBackground.getIconHeight()/7);
+        AdminMainFrame.add(listScrollPane);
+
+    }
+
+    public void setButton(){
+
+        changeUserInfoButton = new JButton("changeUserInfo");
+        //changeUserInfoButton.setUI(new BasicButtonUI());
+        changeUserInfoButton.setBounds(
+                AdminMainBackground.getIconWidth()/15,
+                AdminMainBackground.getIconHeight()/10,
+                AdminMainBackground.getIconWidth()/5,
+                AdminMainBackground.getIconHeight()/15);
+        //changeUserInfoButton.setContentAreaFilled(false);
+        changeUserInfoButton.setFont(new Font("Consolas", 1, 18));
+        //changeUserInfoButton.setMargin(new Insets(0, 0, 0, 0));
+
+        delUserButton = new JButton("deleteUser");
+        delUserButton.setBounds(
+                AdminMainBackground.getIconWidth()/15,
+                AdminMainBackground.getIconHeight()/10 + AdminMainBackground.getIconHeight()/5,
+                AdminMainBackground.getIconWidth()/5,
+                AdminMainBackground.getIconHeight()/15);
+        delUserButton.setFont(new Font("Consolas", 1, 18));
+
+        addUserButton = new JButton("addUser");
+        addUserButton.setBounds(
+                AdminMainBackground.getIconWidth()/15,
+                AdminMainBackground.getIconHeight()/10 + 2*AdminMainBackground.getIconHeight()/5,
+                AdminMainBackground.getIconWidth()/5,
+                AdminMainBackground.getIconHeight()/15);
+        addUserButton.setFont(new Font("Consolas", 1, 18));
+
+        listUserButton = new JButton("listUser");
+        listUserButton.setBounds(
+                AdminMainBackground.getIconWidth()/15,
+                AdminMainBackground.getIconHeight()/10 + 3*AdminMainBackground.getIconHeight()/5,
+                AdminMainBackground.getIconWidth()/5,
+                AdminMainBackground.getIconHeight()/15);
+        listUserButton.setFont(new Font("Consolas", 1, 18));
+
+        AdminMainFrame.add(changeUserInfoButton);
+        AdminMainFrame.add(delUserButton);
+        AdminMainFrame.add(addUserButton);
+        AdminMainFrame.add(listUserButton);
+    }
+
 }

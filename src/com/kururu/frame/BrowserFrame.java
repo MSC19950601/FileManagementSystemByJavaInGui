@@ -9,19 +9,26 @@ import java.awt.event.ActionListener;
  * Created by kururu on 2015/12/4.
  */
 public class BrowserFrame extends JFrame{
-    public static JFrame BrosMainFrame;
-    public static JLabel BrosMainPanelBackground;
-    public static JPanel BrosMainPanel;
-    public static JMenuBar BrosMainMenu;
-    public static JMenu BrosFileMenu,BrosWorkMenu,BrosHelpMenu;
-    public static JMenuItem BrosQuitItem,
+    public JFrame BrosMainFrame;
+    public JLabel BrosMainPanelBackground;
+    public JPanel BrosMainPanel;
+    public JMenuBar BrosMainMenu;
+    public JMenu
+            BrosFileMenu,
+            BrosWorkMenu,
+            BrosHelpMenu;
+    public JMenuItem
+            BrosQuitItem,
             BrosServerItem,
             BrosAboutItem;
 
-    public static ImageIcon BrosMainBackground,
-            welcomeImage,
-            nameLabelBackground, passwordLabelBackground,
-            nameButtonBackground,resetButtonBackground;
+    public JButton
+            downloadFileButton,
+            showFileListButton;
+
+    public JScrollPane listScrollPane;
+
+    public ImageIcon BrosMainBackground;
 
     public BrowserFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -48,6 +55,8 @@ public class BrowserFrame extends JFrame{
         BrosMainFrame.setSize(BrosMainBackground.getIconWidth(), BrosMainBackground.getIconHeight());
 
         setMainMenu();
+        setButton();
+        setTable();
 
         BrosMainFrame.setLocation(300, 300);
         BrosMainFrame.setResizable(false);
@@ -109,5 +118,38 @@ public class BrowserFrame extends JFrame{
                 }
             }
         });
+    }
+
+    public void setTable(){
+        listScrollPane = new JScrollPane();
+        listScrollPane.setBounds(
+                BrosMainBackground.getIconWidth()/3,
+                BrosMainBackground.getIconHeight()/10,
+                3*BrosMainBackground.getIconWidth()/5,
+                BrosMainBackground.getIconHeight()/10 + 4*BrosMainBackground.getIconHeight()/7);
+        BrosMainFrame.add(listScrollPane);
+
+    }
+
+    public void setButton(){
+
+        downloadFileButton = new JButton("downloadFile");
+        downloadFileButton.setBounds(
+                BrosMainBackground.getIconWidth()/15,
+                BrosMainBackground.getIconHeight()/10 + BrosMainBackground.getIconHeight()/5,
+                BrosMainBackground.getIconWidth()/5,
+                BrosMainBackground.getIconHeight()/15);
+        downloadFileButton.setFont(new Font("Consolas", 1, 18));
+
+        showFileListButton = new JButton("showFileList");
+        showFileListButton.setBounds(
+                BrosMainBackground.getIconWidth()/15,
+                BrosMainBackground.getIconHeight()/10 + 2*BrosMainBackground.getIconHeight()/5,
+                BrosMainBackground.getIconWidth()/5,
+                BrosMainBackground.getIconHeight()/15);
+        showFileListButton.setFont(new Font("Consolas", 1, 18));
+        
+        BrosMainFrame.add(downloadFileButton);
+        BrosMainFrame.add(showFileListButton);
     }
 }
