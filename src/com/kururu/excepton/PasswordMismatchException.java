@@ -1,4 +1,4 @@
-package exception;
+package com.kururu.excepton;
 
 public class PasswordMismatchException extends Exception{
 	/**

@@ -67,8 +67,10 @@ public class LoginFrame extends JFrame {
         setLabel();
         setButton();
 
-        mainPanel.add(nameField);
-        mainPanel.add(passwordField);
+        //mainPanel.add(nameField);
+        //mainPanel.add(passwordField);
+        mainFrame.add(nameField);
+        mainFrame.add(passwordField);
         mainFrame.add(nameLabel);
         mainFrame.add(passwordLabel);
         mainFrame.add(loginButton);

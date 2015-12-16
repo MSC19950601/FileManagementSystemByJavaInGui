@@ -14,7 +14,7 @@ import java.sql.*;
 /**
  * Created by kururu on 2015/11/18.
  */
-class Operator extends User{
+public class Operator extends User{
 
     public static int menuNum;
 
@@ -258,16 +258,11 @@ class Operator extends User{
         System.out.println("showFileList");
         Doc doc;
         System.out.println("ID\tCreater\tTimestamp\t\t\tDescription\t\t\tFilename");
-
         Enumeration<Doc> a = DataProcessing.getAllDocs();
-        while(a.hasMoreElements()) {    //测试Enumeration枚举对象中是否还含有元素，如果返回true，则表示还含有至少一个的元素
-
-            doc = a.nextElement();  //如果Bnumeration枚举对象还含有元素，该方法得到对象中的下一个元素
-
+        while(a.hasMoreElements()) {
+            doc = a.nextElement();
             System.out.println(doc.getID() + "\t" + doc.getCreator() + "\t" + doc.getTimestamp() + "\t\t" +
                     doc.getDescription() + "\t\t\t" + doc.getFilename());
         }
-
     }
-
 }

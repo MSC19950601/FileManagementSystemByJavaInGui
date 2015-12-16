@@ -153,3 +153,4 @@ public class BrowserFrame extends JFrame{
         BrosMainFrame.add(showFileListButton);
     }
 }
+

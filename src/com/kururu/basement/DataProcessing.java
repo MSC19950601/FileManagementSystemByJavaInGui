@@ -27,7 +27,7 @@ public class DataProcessing {
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         docs = new Hashtable<String,Doc>();
-        docs.put("0000",new Doc("0000","fucker",timestamp,"sample for test","Data/test.txt"));
+        //docs.put("0000",new Doc("0000","fucker",timestamp,"sample for test","Data/test.txt"));
         docs.put("0001",new Doc("0001","jack",timestamp,"Age Source Java","Age.java"));
     }
 

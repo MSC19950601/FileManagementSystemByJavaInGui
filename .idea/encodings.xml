@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/src/com/kururu/database/MysqlDatabaseForUser.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/kururu/frame/LoginFrame.java" charset="GBK" />
     <file url="file://F:/project/multithreadingAndSystem/example/java C.S档案管理系统 桌面应用程序/源码/form/Main.java" charset="GBK" />
     <file url="file://F:/project/multithreadingAndSystem/example/学生档案管理系统+java课程设计/学生档案管理系统/src/studentsystem/mainFrame.java" charset="GBK" />
   </component>

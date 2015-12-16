@@ -5,7 +5,7 @@ import java.util.Scanner;
 /**
  * Created by kururu on 2015/11/18.
  */
-class Browser extends User{
+public class Browser extends User{
     //add on 20151202
     public String docNum;
     public Doc docTest;
