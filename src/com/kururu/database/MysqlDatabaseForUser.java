@@ -20,73 +20,39 @@ public class MysqlDatabaseForUser {
     public static String resName,resPassword,resRole;
 
     public static User searchUser(String name, String password) throws Exception{
+
         try{
-
-
             System.out.println("connecting to database now, loading...");
             Class.forName("com.mysql.jdbc.Driver");
             Connection conForSearch = DriverManager.getConnection(
                     connectionAddress, connectionName, connectionPassword);
             if(!conForSearch.isClosed()){
-
-                //User resUser;
-                //String resName,resPassword,resRole;
-
                 System.out.println("Connecting successfully!");
                 Statement staForSearch = conForSearch.createStatement();
-                //String insertSqlStr = "SELECT * FROM user WHERE USER_NAME ='" + name + "'";
                 String SearchSqlStr = "SELECT * FROM user WHERE USER_NAME ='" + name + "'AND USER_PASSWORD = '" + password + "'";
                 ResultSet res = staForSearch.executeQuery(SearchSqlStr);
 
                 while(res.next()) {
                     resName = res.getString("USER_NAME");
-                    System.out.println(resName);
+                    //System.out.println(resName);
                     resPassword = res.getString("USER_PASSWORD");
-                    System.out.println(resPassword);
+                    //System.out.println(resPassword);
                     resRole = res.getString("USER_ROLE");
-                    System.out.println(resRole);
+                    //System.out.println(resRole);
+                    if(resRole.equals("operator")){
+                        System.out.println("operator");
+                        resUser = new Operator(resName,resPassword,resRole);
+                    }else if(resRole.equals("browser")){
+                        System.out.println("browser");
+                        resUser = new Browser(resName,resPassword,resRole);
+                    }else if(resRole.equals("administrator")){
+                        System.out.println("administrator");
+                        resUser = new Administrator(resName,resPassword,resRole);
+                    }
                 }
-
-                if(resRole.equals("operator")){
-                    //User resUser;
-                    System.out.println("operator");
-                    resUser = new Operator(resName,resPassword,resRole);
-                    return resUser;
-                }else if(resRole.equals("browser")){
-                    //User resUser;
-                    System.out.println("browser");
-                    resUser = new Browser(resName,resPassword,resRole);
-                    return resUser;
-                }else if(resRole.equals("administrator")){
-                    //User resUser;
-                    System.out.println("administrator");
-                    resUser = new Administrator(resName,resPassword,resRole);
-                    return resUser;
-                }
-
                 res.close();
                 staForSearch.close();
                 conForSearch.close();
-
-                //return resUser;
-
-                /*if(resRole.equals("operator")){
-                    //User resUser;
-                    System.out.println("operator");
-                    resUser = new Operator(resName,resPassword,resRole);
-                    return resUser;
-                }else if(resRole.equals("browser")){
-                    //User resUser;
-                    System.out.println("browser");
-                    resUser = new Browser(resName,resPassword,resRole);
-                    return resUser;
-                }else if(resRole.equals("administrator")){
-                    //User resUser;
-                    System.out.println("administrator");
-                    resUser = new Administrator(resName,resPassword,resRole);
-                    return resUser;
-                }*/
-
             }else{
                 System.out.println("Sorry, Connection is closed!");
             }
@@ -95,8 +61,10 @@ public class MysqlDatabaseForUser {
         }catch (SQLException e) {
             e.printStackTrace();
         }finally{
-            System.out.println("fucker");
-            return null;
+            if(resUser == null)
+                return null;
+            else
+                return resUser;
         }
     }
 
