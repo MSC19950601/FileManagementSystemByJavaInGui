@@ -1,11 +1,9 @@
 package com.kururu.database;
 
 import com.kururu.basement.*;
-
 import java.lang.*;
-
 import java.sql.*;
-
+import java.util.Vector;
 
 /**
  * Created by kururu on 2015/12/16.
@@ -18,6 +16,43 @@ public class MysqlDatabaseForUser {
 
     public static User resUser;
     public static String resName,resPassword,resRole;
+
+    public static void getAllUserForAdmin(Vector colHead, Vector rows, int count){
+        Connection connection;
+        Statement statement;
+        ResultSet resultSet;
+        ResultSetMetaData rsmd;
+        try {
+            System.out.println("connecting to database now, loading...");
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                    connectionAddress, connectionName, connectionPassword);
+            if (!connection.isClosed()) {
+                System.out.println("Connecting successfully!");
+                String query = "SELECT * FROM user";
+                statement = connection.createStatement();
+                resultSet = statement.executeQuery(query);
+                rsmd = resultSet.getMetaData();
+                count = rsmd.getColumnCount();
+                for(int i = 1; i < rsmd.getColumnCount() + 1; i++){
+                    colHead.addElement(rsmd.getColumnName(i));
+                    while(resultSet.next()){
+                        Vector currentRow = new Vector();
+                        for(int j = 1; j < rsmd.getColumnCount() + 1; j++){
+                            currentRow.addElement(resultSet.getString(j));
+                        }
+                        rows.addElement(currentRow);
+                    }
+                }
+            }
+
+        }catch (Exception e){
+            System.err.println("Connecting Failed");
+            e.printStackTrace();
+            System.exit(0);
+        }
+
+    }
 
     public static User searchUser(String name, String password) throws Exception{
 
@@ -82,7 +117,7 @@ public class MysqlDatabaseForUser {
                 System.out.println("update " + count + " line,"+"name is "+name);
                 staForUpdate.close();
                 conForUpdate.close();
-                return true;
+
             }else{
                 System.out.println("Sorry, Connection is closed!");
             }
@@ -91,7 +126,7 @@ public class MysqlDatabaseForUser {
         }catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            return false;
+            return true;
         }
     }
 
@@ -109,7 +144,6 @@ public class MysqlDatabaseForUser {
                 System.out.println("insert" + count + "line,"+"name is "+name);
                 staForInsert.close();
                 conForInsert.close();
-                return true;
             }else{
                 System.out.println("Sorry, Connection is closed!");
             }
@@ -118,7 +152,7 @@ public class MysqlDatabaseForUser {
         }catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            return false;
+            return true;
         }
     }
 
@@ -137,7 +171,6 @@ public class MysqlDatabaseForUser {
                 System.out.println("delete" + count + "line,"+"name is"+delName);
                 staForsel.close();
                 conForDel.close();
-                return true;
             }else{
                 System.out.println("Sorry, Connection is closed!");
             }
@@ -146,7 +179,7 @@ public class MysqlDatabaseForUser {
         }catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            return false;
+            return true;
         }
     }
 }

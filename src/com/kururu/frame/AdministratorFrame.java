@@ -1,17 +1,37 @@
 package com.kururu.frame;
 
 import com.kururu.basement.DataProcessing;
+import com.kururu.database.MysqlDatabaseForUser;
 
 import javax.swing.*;
+import javax.swing.event.TableModelListener;
 import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.Vector;
 
 /**
  * Created by kururu on 2015/12/4.
  */
 public class AdministratorFrame extends JFrame {
+
+    /*final public static String connectionAddress= "jdbc:mysql://127.0.0.1:3306/baseforsystemcharger";
+    final public static String connectionName = "root";
+    final public static String connectionPassword = "mo123456";
+    private Connection connection;
+    private Statement statement;
+    private ResultSet resultSet;
+    private ResultSetMetaData rsmd;*/
 
     public JFrame AdminMainFrame;
     public JLabel AdminMainPanelBackground;
@@ -36,6 +56,9 @@ public class AdministratorFrame extends JFrame {
     private ImageIcon AdminMainBackground;
 
     public JScrollPane listScrollPane;
+    public TableModel AdminTableModel;
+    public JTable AdminJTableForUser;
+    public JTableHeader AdminJTableForUserHeader;
 
     public AdministratorFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -63,12 +86,13 @@ public class AdministratorFrame extends JFrame {
 
         setMainMenu();
         setButton();
-        setTable();
+        //setTable();
 
         AdminMainFrame.setLocation(300, 300);
         AdminMainFrame.setResizable(false);
         AdminMainFrame.setVisible(true);
     }
+
     //set menu
     public void setMainMenu(){
         AdminMainMenu = new JMenuBar();
@@ -128,13 +152,38 @@ public class AdministratorFrame extends JFrame {
     }
 
     public void setTable(){
-        listScrollPane = new JScrollPane();
+
+        Vector colHead = new Vector();
+        Vector rows = new Vector();
+        int count = 0;
+
+        MysqlDatabaseForUser.getAllUserForAdmin(colHead,rows,count);
+        AdminJTableForUser = new JTable(rows,colHead);
+        //AdminJTableForUser.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        try{
+            for(int i = 1; i < count ; i++){
+                TableColumn column = AdminJTableForUser.getColumnModel().getColumn(i);
+                column.setWidth(AdminMainBackground.getIconWidth()/5);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        listScrollPane = new JScrollPane(AdminJTableForUser);
+        listScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         listScrollPane.setBounds(
                 AdminMainBackground.getIconWidth()/3,
                 AdminMainBackground.getIconHeight()/10,
                 3*AdminMainBackground.getIconWidth()/5,
                 AdminMainBackground.getIconHeight()/10 + 4*AdminMainBackground.getIconHeight()/7);
         AdminMainFrame.add(listScrollPane);
+
+        /*AdminTableModel = new DefaultTableModel();
+
+        AdminJTableForUser = new JTable(AdminTableModel);*/
+
+        //listScrollPane.setViewportView(AdminJTableForUser);
 
     }
 
@@ -180,6 +229,14 @@ public class AdministratorFrame extends JFrame {
                 AdminMainBackground.getIconWidth()/5,
                 AdminMainBackground.getIconHeight()/15);
         listUserButton.setFont(new Font("Consolas", 1, 18));
+        listUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == listUserButton){
+                    setTable();
+                }
+            }
+        });
 
         AdminMainFrame.add(changeUserInfoButton);
         AdminMainFrame.add(delUserButton);
