@@ -6,13 +6,9 @@ import com.kururu.database.MysqlDatabaseForUser;
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.plaf.basic.BasicButtonUI;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -159,16 +155,25 @@ public class AdministratorFrame extends JFrame {
 
         MysqlDatabaseForUser.getAllUserForAdmin(colHead,rows,count);
         AdminJTableForUser = new JTable(rows,colHead);
-        //AdminJTableForUser.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        AdminJTableForUser.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        AdminJTableForUser.setRowHeight(AdminMainBackground.getIconHeight()/15);
+        AdminJTableForUser.setFont(new Font("Consolas", 0x0, 20));
 
         try{
             for(int i = 1; i < count ; i++){
+
                 TableColumn column = AdminJTableForUser.getColumnModel().getColumn(i);
-                column.setWidth(AdminMainBackground.getIconWidth()/5);
+                column.setWidth(AdminMainBackground.getIconWidth() / 5);
+
+                DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+                renderer.setHorizontalAlignment(SwingConstants.CENTER);
+                AdminJTableForUser.getColumn(i).setCellRenderer(renderer);
+                //column.setPreferredWidth(AdminMainBackground.getIconWidth()/5);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+
 
         listScrollPane = new JScrollPane(AdminJTableForUser);
         listScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -219,6 +224,7 @@ public class AdministratorFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new AddUserFrame();
+                AdminMainFrame.dispose();
             }
         });
 
@@ -248,21 +254,24 @@ public class AdministratorFrame extends JFrame {
 
 class AddUserFrame extends JDialog{
 
-    public static JDialog mainDialogOfAddUser;
-    public static JPanel mainPanelOfAddUser;
-    public static ImageIcon mainBackgroundOfAddUser;
-    public static JLabel
+    public JDialog mainDialogOfAddUser;
+    public JPanel mainPanelOfAddUser;
+    public ImageIcon mainBackgroundOfAddUser;
+    public JLabel
             mainPanelOfAddUserBackground,
             nameLabelOfAddUser,
             passwordLabelOfAddUser,
             roleLabelOfAddUser;
 
-    public static JButton addButton,cancelButton;
+    public JButton addButton,cancelButton;
 
-    public static JTextField nameFieldOfAddUser,roleFieldOfAddUser;
-    public static JPasswordField passwordFieldOfAddUser;
+    public JTextField nameFieldOfAddUser,roleFieldOfAddUser;
+    public JPasswordField passwordFieldOfAddUser;
 
-    public static String nameOfAddUser,passwordOfAddUser,roleOfAdduser;
+    public JCheckBox adminCheck,opeCheck,broCheck;
+
+
+    public String nameOfAddUser,passwordOfAddUser,roleOfAdduser;
 
 
     public AddUserFrame(){
@@ -302,6 +311,7 @@ class AddUserFrame extends JDialog{
         setFieldOfAddUser();
         setLabelOfAddUser();
         setButtonOfAddUser();
+        setCheckBox();
 
 
         mainDialogOfAddUser.setResizable(false);
@@ -314,7 +324,7 @@ class AddUserFrame extends JDialog{
         addButton = new JButton("ADD");
         addButton.setBounds(
                 mainBackgroundOfAddUser.getIconWidth() / 5,
-                5*mainBackgroundOfAddUser.getIconHeight() / 7,
+                5 * mainBackgroundOfAddUser.getIconHeight() / 7,
                 mainBackgroundOfAddUser.getIconWidth() / 5,
                 mainBackgroundOfAddUser.getIconHeight() / 10
         );
@@ -324,7 +334,7 @@ class AddUserFrame extends JDialog{
             public void actionPerformed(ActionEvent e) {
                 nameOfAddUser = nameFieldOfAddUser.getText();
                 passwordOfAddUser = new String(passwordFieldOfAddUser.getPassword());
-                roleOfAdduser = roleFieldOfAddUser.getText();
+                //roleOfAdduser = roleFieldOfAddUser.getText();
 
                 if(nameOfAddUser.equals("")){
                     JOptionPane.showMessageDialog(
@@ -334,7 +344,7 @@ class AddUserFrame extends JDialog{
                     );
                     nameFieldOfAddUser.setText("");
                     passwordFieldOfAddUser.setText("");
-                    roleFieldOfAddUser.setText("");
+                    //roleFieldOfAddUser.setText("");
                 }else if(passwordOfAddUser.equals("")){
                     JOptionPane.showMessageDialog(
                             null,
@@ -343,7 +353,7 @@ class AddUserFrame extends JDialog{
                     );
                     nameFieldOfAddUser.setText("");
                     passwordFieldOfAddUser.setText("");
-                    roleFieldOfAddUser.setText("");
+                    //roleFieldOfAddUser.setText("");
                 }else if(roleOfAdduser.equals("")) {
                     JOptionPane.showMessageDialog(
                             null,
@@ -352,11 +362,13 @@ class AddUserFrame extends JDialog{
                     );
                     nameFieldOfAddUser.setText("");
                     passwordFieldOfAddUser.setText("");
-                    roleFieldOfAddUser.setText("");
+                    //roleFieldOfAddUser.setText("");
                 }
 
                 try{
-                    DataProcessing.insertUser(nameOfAddUser,passwordOfAddUser,roleOfAdduser);
+                    //DataProcessing.insertUser(nameOfAddUser,passwordOfAddUser,roleOfAdduser);
+                    MysqlDatabaseForUser.insertUser(nameOfAddUser,passwordOfAddUser,roleOfAdduser);
+
                 }catch (Exception e1){
                     e1.printStackTrace();
                 }finally {
@@ -365,6 +377,7 @@ class AddUserFrame extends JDialog{
                             "ADD successfully!",
                             JOptionPane.PLAIN_MESSAGE);
                     mainDialogOfAddUser.dispose();
+                    new AdministratorFrame();
                 }
             }
         });
@@ -381,6 +394,7 @@ class AddUserFrame extends JDialog{
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainDialogOfAddUser.dispose();
+                new AdministratorFrame();
             }
         });
 
@@ -391,11 +405,11 @@ class AddUserFrame extends JDialog{
     private void setLabelOfAddUser() {
         nameLabelOfAddUser = new JLabel("name");
         passwordLabelOfAddUser = new JLabel("password");
-        roleLabelOfAddUser = new JLabel("role");
+        //roleLabelOfAddUser = new JLabel("role");
 
         nameLabelOfAddUser.setBounds(
                 mainBackgroundOfAddUser.getIconWidth() / 3,
-                mainBackgroundOfAddUser.getIconHeight() / 5 -30,
+                mainBackgroundOfAddUser.getIconHeight() / 5 - 30,
                 mainBackgroundOfAddUser.getIconWidth() / 5,
                 mainBackgroundOfAddUser.getIconHeight() / 11
         );
@@ -409,17 +423,17 @@ class AddUserFrame extends JDialog{
         );
         passwordLabelOfAddUser.setFont(new Font("Consolas", 0x1, 25));
 
-        roleLabelOfAddUser.setBounds(
-                mainBackgroundOfAddUser.getIconWidth() / 3,
+        /*roleLabelOfAddUser.setBounds(
+                mainBackgroundOfAddUser.getIconWidth() / 6 - 30,
                 3*mainBackgroundOfAddUser.getIconHeight() / 5 -30,
                 mainBackgroundOfAddUser.getIconWidth() / 5,
                 mainBackgroundOfAddUser.getIconHeight() / 11
         );
-        roleLabelOfAddUser.setFont(new Font("Consolas", 0x1, 25));
+        roleLabelOfAddUser.setFont(new Font("Consolas", 0x1, 25));*/
 
         mainDialogOfAddUser.add(nameLabelOfAddUser);
         mainDialogOfAddUser.add(passwordLabelOfAddUser);
-        mainDialogOfAddUser.add(roleLabelOfAddUser);
+        //mainDialogOfAddUser.add(roleLabelOfAddUser);
 
 
     }
@@ -427,10 +441,10 @@ class AddUserFrame extends JDialog{
     private void setFieldOfAddUser() {
         nameFieldOfAddUser = new JTextField(20);
         passwordFieldOfAddUser = new JPasswordField(20);
-        roleFieldOfAddUser = new JTextField(20);
+        //roleFieldOfAddUser = new JTextField(20);
         nameFieldOfAddUser.setFont(new Font("Consolas", 0x1, 20));
         passwordFieldOfAddUser.setFont(new Font("Consolas", 0x1, 20));
-        roleFieldOfAddUser.setFont(new Font("Consolas", 0x1, 20));
+        //roleFieldOfAddUser.setFont(new Font("Consolas", 0x1, 20));
         passwordFieldOfAddUser.setEchoChar('*');
         nameFieldOfAddUser.setBounds(
                 mainBackgroundOfAddUser.getIconWidth() / 2,
@@ -444,16 +458,77 @@ class AddUserFrame extends JDialog{
                 mainBackgroundOfAddUser.getIconWidth() / 5,
                 mainBackgroundOfAddUser.getIconHeight() / 11
         );
-        roleFieldOfAddUser.setBounds(
+        /*roleFieldOfAddUser.setBounds(
                 mainBackgroundOfAddUser.getIconWidth() / 2,
                 3*mainBackgroundOfAddUser.getIconHeight() / 5 -30,
                 mainBackgroundOfAddUser.getIconWidth() / 5,
                 mainBackgroundOfAddUser.getIconHeight() / 11
-        );
+        );*/
 
         mainDialogOfAddUser.add(nameFieldOfAddUser);
         mainDialogOfAddUser.add(passwordFieldOfAddUser);
-        mainDialogOfAddUser.add(roleFieldOfAddUser);
+        //mainDialogOfAddUser.add(roleFieldOfAddUser);
+    }
+
+    public void setCheckBox(){
+
+        adminCheck = new JCheckBox("administrator",false);
+        opeCheck = new JCheckBox("operation",false);
+        broCheck = new JCheckBox("browser",false);
+
+        adminCheck.setBounds(
+                mainBackgroundOfAddUser.getIconWidth() / 10,
+                3*mainBackgroundOfAddUser.getIconHeight() / 5 -30,
+                mainBackgroundOfAddUser.getIconWidth() /5 + 50,
+                mainBackgroundOfAddUser.getIconHeight() / 11
+        );
+        adminCheck.setContentAreaFilled(false);
+        adminCheck.setFont(new Font("Consolas", 0x1, 18));
+        adminCheck.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED){
+                    roleOfAdduser = "administrator";
+                }
+            }
+        });
+
+        opeCheck.setBounds(
+                mainBackgroundOfAddUser.getIconWidth() / 10 + 175,
+                3*mainBackgroundOfAddUser.getIconHeight() / 5 -30,
+                mainBackgroundOfAddUser.getIconWidth() /5 + 25,
+                mainBackgroundOfAddUser.getIconHeight() / 11
+        );
+        opeCheck.setContentAreaFilled(false);
+        opeCheck.setFont(new Font("Consolas", 0x1, 18));
+        opeCheck.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED){
+                    roleOfAdduser = "operator";
+                }
+            }
+        });
+
+        broCheck.setBounds(
+                mainBackgroundOfAddUser.getIconWidth() / 10 + 320,
+                3*mainBackgroundOfAddUser.getIconHeight() / 5 -30,
+                mainBackgroundOfAddUser.getIconWidth() /5,
+                mainBackgroundOfAddUser.getIconHeight() / 11
+        );
+        broCheck.setContentAreaFilled(false);
+        broCheck.setFont(new Font("Consolas", 0x1, 18));
+        broCheck.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                roleOfAdduser = "browser";
+            }
+        });
+
+        mainDialogOfAddUser.add(adminCheck);
+        mainDialogOfAddUser.add(opeCheck);
+        mainDialogOfAddUser.add(broCheck);
+
     }
 
 }
