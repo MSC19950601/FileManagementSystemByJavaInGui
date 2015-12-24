@@ -211,9 +211,7 @@ public class AdministratorFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(listScrollPane.isVisible()) {
-
                     delRow = AdminJTableForUser.getSelectedRow();
-
                     if (delRow == -1) {
                         JOptionPane.showMessageDialog(null,
                                 "No SelectedRow!", "error",
@@ -221,20 +219,35 @@ public class AdministratorFrame extends JFrame {
                     }else {
                         int changeColumn = AdminJTableForUser.getSelectedColumn();
                         int changeRow = AdminJTableForUser.getSelectedRow();
+                        String originalInfo = AdminJTableForUser.getValueAt(changeRow,changeColumn).toString();
+
                         CellEditor ce = AdminJTableForUser.getCellEditor(changeRow, changeColumn);
                         ce.stopCellEditing();
                         DefaultTableModel dtm = (DefaultTableModel)AdminJTableForUser.getModel();
-                        String col = dtm.getColumnName(changeColumn );
-                        String res = dtm.getValueAt(changeRow, changeColumn ).toString();
-                        String res2 = dtm.getValueAt(changeRow, changeColumn - 1).toString();
+                        String changedCellsCol = dtm.getColumnName(changeColumn);
 
-                        try {
-                            MysqlDatabaseForUser.updateUserSed(res2,res);
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
+                        if(changedCellsCol.equals("USER_NAME")){
+                            String changeInfo = dtm.getValueAt(changeRow, changeColumn).toString();
+                            try {
+                                MysqlDatabaseForUser.updateUserForNameAndPassword(originalInfo, changeInfo, changedCellsCol);
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+                            JOptionPane.showMessageDialog(null,
+                                    "Change successfully!", "error",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }else if(changedCellsCol.equals("USER_PASSWORD")){
+                            String changeInfo = dtm.getValueAt(changeRow, changeColumn).toString();
+                            try {
+                                String originalName = dtm.getValueAt(changeRow, changeColumn - 1).toString();
+                                MysqlDatabaseForUser.updateUserForNameAndPassword(originalName , changeInfo, changedCellsCol);
+                                JOptionPane.showMessageDialog(null,
+                                        "Change successfully!", "error",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
                         }
-                        System.out.println(res + res2 + col);
-
                     }
                 }else{
                     JOptionPane.showMessageDialog(null,
@@ -257,9 +270,7 @@ public class AdministratorFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 if(listScrollPane.isVisible()) {
-
                     delRow = AdminJTableForUser.getSelectedRow();
-
                     if (delRow == -1) {
                         JOptionPane.showMessageDialog(null,
                                 "No SelectedRow!", "error",
@@ -272,6 +283,9 @@ public class AdministratorFrame extends JFrame {
                             e1.printStackTrace();
                         }
                         ((DefaultTableModel) AdminJTableForUser.getModel()).removeRow(delRow);
+                        JOptionPane.showMessageDialog(null,
+                                "Delete successfully!", "error",
+                                JOptionPane.INFORMATION_MESSAGE);
                     }
                 }else{
                     JOptionPane.showMessageDialog(null,

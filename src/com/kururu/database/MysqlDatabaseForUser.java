@@ -117,7 +117,6 @@ public class MysqlDatabaseForUser {
                 System.out.println("update " + count + " line,"+"name is "+name);
                 staForUpdate.close();
                 conForUpdate.close();
-
             }else{
                 System.out.println("Sorry, Connection is closed!");
             }
@@ -130,8 +129,9 @@ public class MysqlDatabaseForUser {
         }
     }
 
-    public static boolean updateUserSed(String name, String changeInfo) throws Exception{
+    public static boolean updateUserForNameAndPassword(String name, String changeInfo, String changedCellsCol) throws Exception{
         try{
+            String insertSqlStr;
             System.out.println("connecting to database now, loading...");
             Class.forName("com.mysql.jdbc.Driver");
             Connection conForUpdate = DriverManager.getConnection(
@@ -139,13 +139,16 @@ public class MysqlDatabaseForUser {
             if(!conForUpdate.isClosed()){
                 System.out.println("Connecting successfully!");
                 Statement staForUpdate = conForUpdate.createStatement();
-                String insertSqlStr = "UPDATE user SET USER_PASSWORD = '" + changeInfo + "'WHERE USER_NAME = '" + name + "'";
-                //int count = staForUpdate.executeUpdate(insertSqlStr);
+
+                if(changedCellsCol.equals("USER_NAME")) {
+                    insertSqlStr = "UPDATE user SET USER_NAME = '" + changeInfo + "'WHERE USER_NAME = '" + name + "'";
+                }
+                else{
+                    insertSqlStr = "UPDATE user SET USER_PASSWORD = '" + changeInfo + "'WHERE USER_NAME = '" + name + "'";
+                }
                 staForUpdate.executeUpdate(insertSqlStr);
-                //System.out.println("update " + count + " line,"+"changeInfo is " + changeInfo);
                 staForUpdate.close();
                 conForUpdate.close();
-
             }else{
                 System.out.println("Sorry, Connection is closed!");
             }
@@ -195,7 +198,6 @@ public class MysqlDatabaseForUser {
                 Statement staForsel = conForDel.createStatement();
                 String delSqlStr = "DELETE FROM user WHERE USER_NAME = " + "'" + delName + "'";
                 int count = staForsel.executeUpdate(delSqlStr);
-                System.out.println("delete " + count + " line,"+" name is "+delName);
                 staForsel.close();
                 conForDel.close();
             }else{
