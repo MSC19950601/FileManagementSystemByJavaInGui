@@ -2,8 +2,11 @@ package com.kururu.frame;
 
 import com.kururu.basement.DataProcessing;
 import com.kururu.database.MysqlDatabaseForUser;
+import javafx.scene.control.Cell;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.table.*;
