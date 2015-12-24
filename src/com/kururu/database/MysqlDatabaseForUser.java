@@ -130,6 +130,33 @@ public class MysqlDatabaseForUser {
         }
     }
 
+    public static boolean updateUserSed(String name, String changeInfo) throws Exception{
+        try{
+            System.out.println("connecting to database now, loading...");
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conForUpdate = DriverManager.getConnection(
+                    connectionAddress, connectionName, connectionPassword);
+            if(!conForUpdate.isClosed()){
+                System.out.println("Connecting successfully!");
+                Statement staForUpdate = conForUpdate.createStatement();
+                String insertSqlStr = "UPDATE user SET USER_PASSWORD = '" + changeInfo + "'WHERE USER_NAME = '" + name + "'";
+                //int count = staForUpdate.executeUpdate(insertSqlStr);
+                staForUpdate.executeUpdate(insertSqlStr);
+                //System.out.println("update " + count + " line,"+"changeInfo is " + changeInfo);
+                staForUpdate.close();
+                conForUpdate.close();
+
+            }else{
+                System.out.println("Sorry, Connection is closed!");
+            }
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            return true;
+        }
+    }
     public static boolean insertUser(String name, String password, String role) throws Exception{
         try{
             System.out.println("connecting to database now, loading...");
@@ -168,7 +195,7 @@ public class MysqlDatabaseForUser {
                 Statement staForsel = conForDel.createStatement();
                 String delSqlStr = "DELETE FROM user WHERE USER_NAME = " + "'" + delName + "'";
                 int count = staForsel.executeUpdate(delSqlStr);
-                System.out.println("delete" + count + "line,"+"name is"+delName);
+                System.out.println("delete " + count + " line,"+" name is "+delName);
                 staForsel.close();
                 conForDel.close();
             }else{

@@ -48,7 +48,7 @@ public class AdministratorFrame extends JFrame {
     public TableModel AdminTableModel;
     public JTable AdminJTableForUser;
 
-    public static int delRow;
+    public static int delRow,changeRow;
 
     public AdministratorFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -216,6 +216,21 @@ public class AdministratorFrame extends JFrame {
                                 "No SelectedRow!", "error",
                                 JOptionPane.ERROR_MESSAGE);
                     }else {
+                        int changeColumn = AdminJTableForUser.getSelectedColumn();
+                        int changeRow = AdminJTableForUser.getSelectedRow();
+                        CellEditor ce = AdminJTableForUser.getCellEditor(changeRow, changeColumn);
+                        ce.stopCellEditing();
+                        DefaultTableModel dtm = (DefaultTableModel)AdminJTableForUser.getModel();
+                        String col = dtm.getColumnName(changeColumn );
+                        String res = dtm.getValueAt(changeRow, changeColumn ).toString();
+                        String res2 = dtm.getValueAt(changeRow, changeColumn - 1).toString();
+
+                        try {
+                            MysqlDatabaseForUser.updateUserSed(res2,res);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        System.out.println(res + res2 + col);
 
                     }
                 }else{
@@ -225,6 +240,7 @@ public class AdministratorFrame extends JFrame {
                 }
             }
         });
+
 
         delUserButton = new JButton("deleteUser");
         delUserButton.setBounds(
