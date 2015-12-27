@@ -1,9 +1,13 @@
 package com.kururu.frame;
 
+import com.kururu.database.MysqlDatabaseForDoc;
+import com.kururu.database.MysqlDatabaseForUser;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 /**
  * Created by kururu on 2015/12/4.
@@ -27,6 +31,7 @@ public class BrowserFrame extends JFrame{
             showFileListButton;
 
     public JScrollPane listScrollPane;
+    public JTable BroJTableForDoc;
 
     public ImageIcon BrosMainBackground;
 
@@ -55,8 +60,8 @@ public class BrowserFrame extends JFrame{
         BrosMainFrame.setSize(BrosMainBackground.getIconWidth(), BrosMainBackground.getIconHeight());
 
         setMainMenu();
-        setButton();
         setTable();
+        setButton();
 
         BrosMainFrame.setLocation(300, 300);
         BrosMainFrame.setResizable(false);
@@ -121,14 +126,25 @@ public class BrowserFrame extends JFrame{
     }
 
     public void setTable(){
-        listScrollPane = new JScrollPane();
-        listScrollPane.setBounds(
-                BrosMainBackground.getIconWidth()/3,
-                BrosMainBackground.getIconHeight()/10,
-                3*BrosMainBackground.getIconWidth()/5,
-                BrosMainBackground.getIconHeight()/10 + 4*BrosMainBackground.getIconHeight()/7);
-        BrosMainFrame.add(listScrollPane);
+        Vector colHead = new Vector();
+        Vector rows = new Vector();
+        int count = 0;
 
+        MysqlDatabaseForDoc.getAllDocForAdmin(colHead, rows, count);
+        BroJTableForDoc = new JTable(rows,colHead);
+        BroJTableForDoc.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        BroJTableForDoc.setRowHeight(BrosMainBackground.getIconHeight() / 15);
+        BroJTableForDoc.setFont(new Font("Consolas", 0x0, 20));
+
+        listScrollPane = new JScrollPane(BroJTableForDoc);
+        listScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        listScrollPane.setBounds(
+                BrosMainBackground.getIconWidth() / 3,
+                BrosMainBackground.getIconHeight() / 10,
+                3 * BrosMainBackground.getIconWidth() / 5,
+                BrosMainBackground.getIconHeight() / 10 + 4 * BrosMainBackground.getIconHeight()/7);
+        listScrollPane.setVisible(false);
+        BrosMainFrame.add(listScrollPane);
     }
 
     public void setButton(){
@@ -148,6 +164,15 @@ public class BrowserFrame extends JFrame{
                 BrosMainBackground.getIconWidth()/5,
                 BrosMainBackground.getIconHeight()/15);
         showFileListButton.setFont(new Font("Consolas", 1, 18));
+        showFileListButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == showFileListButton){
+                    setTable();
+                    listScrollPane.setVisible(true);
+                }
+            }
+        });
         
         BrosMainFrame.add(downloadFileButton);
         BrosMainFrame.add(showFileListButton);

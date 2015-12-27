@@ -6,6 +6,7 @@ import com.kururu.basement.Operator;
 import com.kururu.basement.*;
 
 import java.sql.*;
+import java.util.Vector;
 
 /**
  * Created by kururu on 2015/12/16.
@@ -18,6 +19,43 @@ public class MysqlDatabaseForDoc {
     public static Doc resDoc;
     public static String resID,resCreator,resDescription,resFilename;
     public static Timestamp resTime;
+
+    public static void getAllDocForAdmin(Vector colHead, Vector rows, int count){
+        Connection connection;
+        Statement statement;
+        ResultSet resultSet;
+        ResultSetMetaData rsmd;
+        try {
+            System.out.println("connecting to database now, loading...");
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                    connectionAddress, connectionName, connectionPassword);
+            if (!connection.isClosed()) {
+                System.out.println("Connecting successfully!");
+                String query = "SELECT * FROM doc";
+                statement = connection.createStatement();
+                resultSet = statement.executeQuery(query);
+                rsmd = resultSet.getMetaData();
+                count = rsmd.getColumnCount();
+                for(int i = 1; i < rsmd.getColumnCount() + 1; i++){
+                    colHead.addElement(rsmd.getColumnName(i));
+                    while(resultSet.next()){
+                        Vector currentRow = new Vector();
+                        for(int j = 1; j < rsmd.getColumnCount() + 1; j++){
+                            currentRow.addElement(resultSet.getString(j));
+                        }
+                        rows.addElement(currentRow);
+                    }
+                }
+            }
+
+        }catch (Exception e){
+            System.err.println("Connecting Failed");
+            e.printStackTrace();
+            System.exit(0);
+        }
+
+    }
 
     public static boolean insertUserDoc(String ID, String creator, Timestamp timestamp, String description, String filename) throws Exception{
         try{

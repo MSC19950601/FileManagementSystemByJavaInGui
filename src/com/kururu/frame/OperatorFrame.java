@@ -1,9 +1,12 @@
 package com.kururu.frame;
 
+import com.kururu.database.MysqlDatabaseForDoc;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 /**
  * Created by kururu on 2015/12/4.
@@ -30,6 +33,7 @@ public class OperatorFrame extends JFrame{
             showFileListButton;
 
     public JScrollPane listScrollPane;
+    public JTable OpeJTableForDoc;
     
     public OperatorFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -123,12 +127,25 @@ public class OperatorFrame extends JFrame{
     }
 
     public void setTable(){
-        listScrollPane = new JScrollPane();
+
+        Vector colHead = new Vector();
+        Vector rows = new Vector();
+        int count = 0;
+
+        MysqlDatabaseForDoc.getAllDocForAdmin(colHead, rows, count);
+        OpeJTableForDoc = new JTable(rows,colHead);
+        OpeJTableForDoc.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        OpeJTableForDoc.setRowHeight(OpeMainBackground.getIconHeight() / 15);
+        OpeJTableForDoc.setFont(new Font("Consolas", 0x0, 20));
+
+
+        listScrollPane = new JScrollPane(OpeJTableForDoc);
         listScrollPane.setBounds(
                 OpeMainBackground.getIconWidth()/3,
                 OpeMainBackground.getIconHeight()/10,
                 3*OpeMainBackground.getIconWidth()/5,
                 OpeMainBackground.getIconHeight()/10 + 4*OpeMainBackground.getIconHeight()/7);
+        listScrollPane.setVisible(false);
         OpeMainFrame.add(listScrollPane);
 
     }
@@ -161,6 +178,15 @@ public class OperatorFrame extends JFrame{
                 OpeMainBackground.getIconWidth()/5,
                 OpeMainBackground.getIconHeight()/15);
         showFileListButton.setFont(new Font("Consolas", 1, 18));
+        showFileListButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == showFileListButton){
+                    setTable();
+                    listScrollPane.setVisible(true);
+                }
+            }
+        });
 
         OpeMainFrame.add(uploadFileButton);
         OpeMainFrame.add(downloadButton);
