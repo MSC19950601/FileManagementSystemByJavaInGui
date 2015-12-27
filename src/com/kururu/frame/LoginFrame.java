@@ -48,7 +48,7 @@ public class LoginFrame extends JFrame {
     }
 
     public void mainInitial() throws Exception{
-        mainFrame = new JFrame("档案管理系统");
+        mainFrame = new JFrame("妗ｆ绠＄悊绯荤粺");
 
         mainBackground = new ImageIcon("Icon/loginBackground.jpg");
         mainPanelBackground = new JLabel(mainBackground);
