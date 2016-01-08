@@ -1,8 +1,17 @@
 package com.kururu.basement;
+import com.kururu.database.MysqlDatabaseForDoc;
 import com.kururu.database.MysqlDatabaseForUser;
 import com.kururu.frame.LoginFrame;
+import com.kururu.netServer.Client;
 
+import java.io.BufferedReader;
+import java.io.*;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.lang.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.sql.Timestamp;
 import java.util.Scanner;
 
 public class Main {
@@ -17,21 +26,29 @@ public class Main {
     public static User loginUser;
 
     public static void main(String[] args) throws Exception{
+        //new Client();
 
         //MysqlDatabaseForUser.deleteUser("jack");
         //MysqlDatabaseForUser.insertUser("msc","123","fucker");
         //MysqlDatabaseForUser.updateUser("msc","456","student");
 
-        loginUser = MysqlDatabaseForUser.searchUser("jack","123");
+        //MysqlDatabaseForDoc.deleteDoc("0001");
+        //Doc test = MysqlDatabaseForDoc.searchDoc("0001");
+        //System.out.println(test.getID());
+
+
+        /*loginUser = MysqlDatabaseForUser.searchUser("jack","123");
         if(loginUser == null){
             System.out.println("null");
             System.exit(0);
         }
         System.out.println(loginUser.getName());
         System.out.println(loginUser.getPassword());
-        System.out.println(loginUser.getRole());
+        System.out.println(loginUser.getRole());*/
+
+
         //SystemFrame test = new SystemFrame();
-        ///LoginFrame test2 = new LoginFrame();
+        LoginFrame test2 = new LoginFrame();
         //LoginJFrameTest test3 = new LoginJFrameTest();
         //test3.showMe();
        /* Scanner jaclin = new Scanner(System.in);

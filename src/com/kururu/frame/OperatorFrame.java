@@ -1,8 +1,11 @@
 package com.kururu.frame;
 
 import com.kururu.database.MysqlDatabaseForDoc;
+import com.kururu.database.MysqlDatabaseForUser;
+import com.kururu.netServer.Client;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -132,7 +135,12 @@ public class OperatorFrame extends JFrame{
         Vector rows = new Vector();
         int count = 0;
 
-        MysqlDatabaseForDoc.getAllDocForAdmin(colHead, rows, count);
+        Vector [] res = Client.getDocTable();
+
+        colHead = res[0];
+        rows = res[1];
+        //
+        //MysqlDatabaseForDoc.getAllDocForAdmin(colHead, rows, count);
         OpeJTableForDoc = new JTable(rows,colHead);
         OpeJTableForDoc.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         OpeJTableForDoc.setRowHeight(OpeMainBackground.getIconHeight() / 15);
@@ -161,7 +169,28 @@ public class OperatorFrame extends JFrame{
                 OpeMainBackground.getIconHeight()/15);
         //uploadFileButton.setContentAreaFilled(false);
         uploadFileButton.setFont(new Font("Consolas", 1, 18));
-        //uploadFileButton.setMargin(new Insets(0, 0, 0, 0));
+        uploadFileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String click = "upload";
+                if(listScrollPane.isVisible()) {
+                    int selectedRow = OpeJTableForDoc.getSelectedRow();
+                    if (selectedRow == -1) {
+                        JOptionPane.showMessageDialog(null,
+                                "No SelectedCell!", "error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }else {
+                        int selectedColumn = OpeJTableForDoc.getSelectedColumn();
+                        String fileName = OpeJTableForDoc.getValueAt(selectedRow,selectedColumn).toString();
+                        new Client(click,fileName);
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null,
+                            "No List!", "error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
         downloadButton = new JButton("downloadFile");
         downloadButton.setBounds(
@@ -170,6 +199,28 @@ public class OperatorFrame extends JFrame{
                 OpeMainBackground.getIconWidth()/5,
                 OpeMainBackground.getIconHeight()/15);
         downloadButton.setFont(new Font("Consolas", 1, 18));
+        downloadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String click = "downloadForOpe";
+                if(listScrollPane.isVisible()) {
+                    int selectedRow = OpeJTableForDoc.getSelectedRow();
+                    if (selectedRow == -1) {
+                        JOptionPane.showMessageDialog(null,
+                                "No SelectedCell!", "error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }else {
+                        int selectedColumn = OpeJTableForDoc.getSelectedColumn();
+                        String fileName = OpeJTableForDoc.getValueAt(selectedRow,selectedColumn).toString();
+                        new Client(click,fileName);
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null,
+                            "No List!", "error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
         showFileListButton = new JButton("showFileList");
         showFileListButton.setBounds(

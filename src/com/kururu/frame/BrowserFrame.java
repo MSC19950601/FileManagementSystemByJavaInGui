@@ -8,6 +8,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Created by kururu on 2015/12/4.
@@ -157,6 +165,7 @@ public class BrowserFrame extends JFrame{
                 BrosMainBackground.getIconHeight()/15);
         downloadFileButton.setFont(new Font("Consolas", 1, 18));
 
+
         showFileListButton = new JButton("showFileList");
         showFileListButton.setBounds(
                 BrosMainBackground.getIconWidth()/15,
@@ -173,9 +182,10 @@ public class BrowserFrame extends JFrame{
                 }
             }
         });
-        
+
         BrosMainFrame.add(downloadFileButton);
         BrosMainFrame.add(showFileListButton);
     }
+
 }
 

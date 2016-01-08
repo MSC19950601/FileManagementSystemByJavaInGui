@@ -2,6 +2,8 @@ package com.kururu.frame;
 
 import com.kururu.basement.DataProcessing;
 import com.kururu.basement.User;
+import com.kururu.database.MysqlDatabaseForUser;
+import com.kururu.netServer.Client;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -13,7 +15,7 @@ import java.sql.SQLException;
 /**
  * Created by kururu on 2015/11/28.
  */
-public class LoginFrame extends JFrame {
+public class LoginFrame extends JFrame{
 
     public static String loginName;
     public static String loginPassword;
@@ -196,12 +198,13 @@ public class LoginFrame extends JFrame {
                 loginName = nameField.getText();
                 loginPassword = new String(passwordField.getPassword());
                 try{
-                    loginUser = DataProcessing.searchUser(loginName, loginPassword);
-                }catch(SQLException SQLExceptionInLoginFrame){
+                    String loginClick = "login";
+                    //loginUser = MysqlDatabaseForUser.searchUser(loginName, loginPassword);
+                    loginUser = Client.loginSecure(loginName,loginPassword);
+                    System.out.println(loginUser.getName());
+                }catch(Exception SQLExceptionInLoginFrame){
                     SQLExceptionInLoginFrame.printStackTrace();
-                }catch (IllegalStateException IllegalStateExceptionInLoginFrame){
-                    IllegalStateExceptionInLoginFrame.printStackTrace();
-                }finally {
+                } finally {
                     if(loginName.equals("")){
                         JOptionPane.showMessageDialog(
                                 null,
@@ -266,4 +269,5 @@ public class LoginFrame extends JFrame {
             }
         });
     }
+
 }

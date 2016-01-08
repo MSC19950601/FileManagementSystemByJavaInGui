@@ -2,6 +2,7 @@ package com.kururu.frame;
 
 import com.kururu.basement.DataProcessing;
 import com.kururu.database.MysqlDatabaseForUser;
+import com.kururu.netServer.Client;
 import javafx.scene.control.Cell;
 
 import javax.swing.*;
@@ -155,7 +156,14 @@ public class AdministratorFrame extends JFrame {
         Vector rows = new Vector();
         int count = 0;
 
-        MysqlDatabaseForUser.getAllUserForAdmin(colHead,rows,count);
+       // MysqlDatabaseForUser.getAllUserForAdmin(colHead,rows,count);
+
+        //Client.getUserTable(colHead,rows);
+        Vector [] res = Client.getUserTable();
+
+        colHead = res[0];
+        rows = res[1];
+
         AdminJTableForUser = new JTable(rows,colHead);
         AdminJTableForUser.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         AdminJTableForUser.setRowHeight(AdminMainBackground.getIconHeight()/15);
@@ -229,7 +237,8 @@ public class AdministratorFrame extends JFrame {
                         if(changedCellsCol.equals("USER_NAME")){
                             String changeInfo = dtm.getValueAt(changeRow, changeColumn).toString();
                             try {
-                                MysqlDatabaseForUser.updateUserForNameAndPassword(originalInfo, changeInfo, changedCellsCol);
+                                Client.changeUserInfo(originalInfo, changeInfo, changedCellsCol);
+                                //MysqlDatabaseForUser.updateUserForNameAndPassword(originalInfo, changeInfo, changedCellsCol);
                             } catch (Exception e1) {
                                 e1.printStackTrace();
                             }
@@ -278,7 +287,8 @@ public class AdministratorFrame extends JFrame {
                     } else {
                         String delName = AdminJTableForUser.getValueAt(delRow, 0).toString();
                         try {
-                            MysqlDatabaseForUser.deleteUser(delName);
+                            //MysqlDatabaseForUser.deleteUser(delName);
+                            Client.deleteUser(delName);
                         } catch (Exception e1) {
                             e1.printStackTrace();
                         }
@@ -447,8 +457,8 @@ class AddUserFrame extends JDialog{
                 }
 
                 try{
-                    MysqlDatabaseForUser.insertUser(nameOfAddUser,passwordOfAddUser,roleOfAdduser);
-
+                    //MysqlDatabaseForUser.insertUser(nameOfAddUser,passwordOfAddUser,roleOfAdduser);
+                    Client.newUserAdd(nameOfAddUser,passwordOfAddUser,roleOfAdduser);
                 }catch (Exception e1){
                     e1.printStackTrace();
                 }finally {

@@ -1,9 +1,10 @@
 package com.kururu.basement;
+import java.io.Serializable;
 import java.util.*;
 /**
  * Created by kururu on 2015/11/18.
  */
-public abstract class User {
+public class User implements Serializable {
 
     private String name;
     private String password;
@@ -55,12 +56,4 @@ public abstract class User {
         }
     }
 
-    /*public User(String nameInput, String passwordInput, String roleInput){
-         while(!setter(nameInput,passwordInput,roleInput)){
-             System.out.println("I'm afraid you input a null name or password!");
-
-         }
-    }*/
-
-    public abstract void showMenu();
 }
