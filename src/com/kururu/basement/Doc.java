@@ -1,21 +1,21 @@
 package com.kururu.basement;
-
 import java.sql.Timestamp;
-
 public class Doc{
 	private String ID;
 	private String creator;
 	private Timestamp timestamp;
 	private String description;
 	private String filename;
+	private String location;
 	
-	public Doc(String ID, String creator, Timestamp timestamp, String description, String filename) {
+	public Doc(String ID, String creator, Timestamp timestamp, String description, String filename, String location) {
 		super();
 		this.ID = ID;
 		this.creator = creator;
 		this.timestamp = timestamp;
 		this.description = description;
 		this.filename = filename;
+		this.location = location;
 	}
 
 	public String getID() {
@@ -58,4 +58,11 @@ public class Doc{
 		this.filename = filename;
 	}
 
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location){
+		this.location = location;
+	}
 }

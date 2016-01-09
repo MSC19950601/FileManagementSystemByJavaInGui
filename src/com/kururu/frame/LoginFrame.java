@@ -1,8 +1,6 @@
 package com.kururu.frame;
 
-import com.kururu.basement.DataProcessing;
 import com.kururu.basement.User;
-import com.kururu.database.MysqlDatabaseForUser;
 import com.kururu.netServer.Client;
 
 import javax.swing.*;
@@ -10,35 +8,41 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.net.ConnectException;
 
 /**
  * Created by kururu on 2015/11/28.
  */
 public class LoginFrame extends JFrame{
 
-    public static String loginName;
-    public static String loginPassword;
-    public static User loginUser;
-    public static JFrame mainFrame;
-    public static JLabel mainPanelBackground,
-    nameLabel,passwordLabel;
-    public static JPanel mainPanel;
-    public static JMenuBar mainMenu;
-    public static JMenu fileMenu,workMenu,helpMenu;
-    public static JMenuItem quitItem,
+    private String loginName;
+    private String loginPassword;
+    private User loginUser;
+    private JFrame mainFrame;
+    private JLabel
+            mainPanelBackground,
+            nameLabel,
+            passwordLabel;
+    private JPanel mainPanel;
+    private JMenuBar mainMenu;
+    private JMenu
+            fileMenu,
+            workMenu,
+            helpMenu;
+    private JMenuItem quitItem,
             serverItem,
             aboutItem;
-    public static JButton loginButton,resetButton;
+    private JButton
+            loginButton,
+            resetButton;
+    private ImageIcon
+            mainBackground,
+            nameButtonBackground,
+            resetButtonBackground;
 
-    public static ImageIcon mainBackground,
-                     welcomeImage,
-                     nameLabelBackground, passwordLabelBackground,
-                     nameButtonBackground,resetButtonBackground;
+    private JTextField nameField;//set login name textfield component
 
-    public static JTextField nameField;//set login name textfield component
-
-    public static JPasswordField passwordField;//set login password textfield component
+    private JPasswordField passwordField;//set login password textfield component
 
     public LoginFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -50,38 +54,29 @@ public class LoginFrame extends JFrame{
     }
 
     public void mainInitial() throws Exception{
-        mainFrame = new JFrame("妗ｆ绠＄悊绯荤粺");
-
+        mainFrame = new JFrame("档案管理系统");
         mainBackground = new ImageIcon("Icon/loginBackground.jpg");
         mainPanelBackground = new JLabel(mainBackground);
         mainPanelBackground.setBounds(0,0,mainBackground.getIconWidth(),mainBackground.getIconHeight());
-
         mainPanel = (JPanel)mainFrame.getContentPane();
         mainPanel.setOpaque(false);
-
         mainPanel.setLayout(null);
         mainFrame.getLayeredPane().add(mainPanelBackground,new Integer(Integer.MIN_VALUE));
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(mainBackground.getIconWidth(), mainBackground.getIconHeight());
-
         setMainMenu();
         setField();
         setLabel();
         setButton();
-
-        //mainPanel.add(nameField);
-        //mainPanel.add(passwordField);
         mainFrame.add(nameField);
         mainFrame.add(passwordField);
         mainFrame.add(nameLabel);
         mainFrame.add(passwordLabel);
         mainFrame.add(loginButton);
         mainFrame.add(resetButton);
-
         mainFrame.setLocation(300, 300);
         mainFrame.setResizable(false);
         mainFrame.setVisible(true);
-
     }
     // menuSetting funcs
     public void setMainMenu(){
@@ -97,7 +92,6 @@ public class LoginFrame extends JFrame{
 
     public void setFileMenu(){
         fileMenu = new JMenu("file");
-
         quitItem = new JMenuItem("quit");
         fileMenu.add(quitItem);
         quitItem.addActionListener(new ActionListener() {
@@ -112,7 +106,6 @@ public class LoginFrame extends JFrame{
 
     public void setWorkMenu(){
         workMenu = new JMenu("work");
-
         serverItem = new JMenuItem("server");
         workMenu.add(serverItem);
         serverItem.addActionListener(new ActionListener() {
@@ -128,7 +121,6 @@ public class LoginFrame extends JFrame{
 
     public void setHelpMenu(){
         helpMenu = new JMenu("help");
-
         aboutItem = new JMenuItem("about");
         helpMenu.add(aboutItem);
         aboutItem.addActionListener(new ActionListener() {
@@ -167,9 +159,6 @@ public class LoginFrame extends JFrame{
                 mainBackground.getIconHeight() / 15);
         nameLabel.setFont(new Font("Consolas", 0x1, 25));
         nameLabel.setBackground(Color.BLACK);
-        //nameLabelBackground = new ImageIcon("Icon/")
-        //nameLabel.setIcon();
-
         passwordLabel.setBounds(
                 mainBackground.getIconWidth()/3 + mainBackground.getIconWidth()/50,
                 mainBackground.getIconHeight()/3 + mainBackground.getIconHeight()/13,
@@ -198,12 +187,10 @@ public class LoginFrame extends JFrame{
                 loginName = nameField.getText();
                 loginPassword = new String(passwordField.getPassword());
                 try{
-                    String loginClick = "login";
-                    //loginUser = MysqlDatabaseForUser.searchUser(loginName, loginPassword);
                     loginUser = Client.loginSecure(loginName,loginPassword);
-                    System.out.println(loginUser.getName());
-                }catch(Exception SQLExceptionInLoginFrame){
-                    SQLExceptionInLoginFrame.printStackTrace();
+                    loginUser.getName();
+                } catch(Exception ExceptionInLoginFrame){
+                    ExceptionInLoginFrame.printStackTrace();
                 } finally {
                     if(loginName.equals("")){
                         JOptionPane.showMessageDialog(
@@ -243,13 +230,12 @@ public class LoginFrame extends JFrame{
                     }else{
                         JOptionPane.showMessageDialog(
                                 null,
-                                "name or password is wrong!", "error",
+                                "name or password is wrong or Server isn't connected!", "error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
         });
-
         resetButtonBackground = new ImageIcon("Icon/resetButtonBackground.png");
         resetButton = new JButton("reset",resetButtonBackground);
         resetButton.setUI(new BasicButtonUI());

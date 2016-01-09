@@ -7,40 +7,37 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.Socket;
-import java.util.EnumMap;
 import java.util.Vector;
 
+/**
+ *
+ */
 public class Client extends Socket {
 
     private static final String SERVER_IP = "127.0.0.1";
-    private static final int SERVER_PORT_FOR_UPLOAD = 2013;
-    private static final int SERVER_PORT_FOR_DOWNLOAD = 2014;
     private static final int FINAL_PORT = 8899;
+    private static final int SERVER_PORT_FOR_UPLOAD = 2016;
+    private static final int SERVER_PORT_FOR_DOWNLOAD = 2014;
+    private static final int SERVER_PORT_FOR_LOGIN = 7809;
+    private static final int SERVER_PORT_FOR_GETUSERTABLE = 1578;
+    private static final int SERVER_PORT_FOR_GETDOCTABLE = 2001;
     private static final String clientPath = "F:\\myJavaCodeInIntelliIdea\\FileManagementSystem\\clientFile\\";
-
-    private static Socket client;
-    private Socket transClientForUpload;
-    private Socket transClientForDownload;
-    private static Socket transClientForLogin;
     private static Socket
+            client,
+            transClientForUpload,
+            transClientForDownload,
+            transClientForLogin,
             transClientForGetUserTable,
             transClientForGetDocTable,
             transClientForAddUser,
             transClientForDeleteUser,
             transClientForChangeUserInfo;
-    private FileInputStream fis;
-    private DataOutputStream dos;
 
+    private static Socket keySocket;
+    private static FileInputStream fis;
+    private static DataOutputStream dos;
 
-    public Client(String click, String fileName) {
-        if (click.equals("upload")) {
-            upload(fileName, click);
-        } else if (click.equals("downloadForOpe")) {
-            download(fileName, click);
-        }
-    }
-
-    private void transClickForUpload(String click) throws IOException {
+    private static void transClickForUpload(String click) throws IOException {
         try {
             transClientForUpload = new Socket(SERVER_IP, FINAL_PORT);
             transClientForUpload.setSoTimeout(60000);
@@ -55,7 +52,7 @@ public class Client extends Socket {
         }
     }
 
-    private void transClickForDownload(String click, String fileName) throws IOException {
+    private static void transClickForDownload(String click, String fileName) throws IOException {
         try {
             transClientForDownload = new Socket(SERVER_IP, FINAL_PORT);
             transClientForDownload.setSoTimeout(60000);
@@ -164,24 +161,36 @@ public class Client extends Socket {
         }
     }
 
-    public void upload(String fileName, String click) {
+    private static void transClickAndCommand(String click, String command) throws IOException {
+        try{
+            keySocket = new Socket(SERVER_IP, FINAL_PORT);
+            keySocket .setSoTimeout(600000);
+            PrintWriter printWriter = new
+                    PrintWriter(keySocket.getOutputStream(), true);
+            printWriter.println(click);
+            printWriter.flush();
+            printWriter.println(command);
+            printWriter.flush();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void upload(String fileName, String click) {
         try {
             try {
                 transClickForUpload(click);
                 client = new Socket(SERVER_IP, SERVER_PORT_FOR_UPLOAD);
-                client.setSoTimeout(60000);
+                client.setSoTimeout(600000);
                 //向服务端传送文件
                 File file = new File(clientPath + fileName);
-
                 fis = new FileInputStream(file);
                 dos = new DataOutputStream(client.getOutputStream());
-
                 //文件名和长度
                 dos.writeUTF(file.getName());
                 dos.flush();
                 dos.writeLong(file.length());
                 dos.flush();
-
                 //传输文件
                 byte[] sendBytes = new byte[1024];
                 int length = 0;
@@ -189,7 +198,6 @@ public class Client extends Socket {
                     dos.write(sendBytes, 0, length);
                     dos.flush();
                 }
-                System.out.println("fuckfuck");
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -199,7 +207,8 @@ public class Client extends Socket {
                 if (dos != null)
                     System.out.println("dos");
                 dos.close();
-                System.out.println("cli");
+                if(client != null)
+                    System.out.println("cli");
                 client.close();
             }
         } catch (Exception e) {
@@ -207,14 +216,12 @@ public class Client extends Socket {
         }
     }
 
-    public void download(String fileName, String click) {
-
+    public static void download(String fileName, String click) {
         try {
             try {
                 transClickForDownload(click, fileName);
                 byte[] aByte = new byte[1];
                 int bytesRead;
-
                 Socket clientSocket = null;
                 InputStream is = null;
                 try {
@@ -223,34 +230,29 @@ public class Client extends Socket {
                 } catch (IOException ex) {
                     // Do exception handling
                 }
-
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
                 if (is != null) {
-
                     FileOutputStream fos = null;
                     BufferedOutputStream bos = null;
                     try {
-
                         fos = new FileOutputStream(clientPath + fileName);
                         bos = new BufferedOutputStream(fos);
                         bytesRead = is.read(aByte, 0, aByte.length);
-
                         do {
                             baos.write(aByte);
                             bytesRead = is.read(aByte);
                         } while (bytesRead != -1);
-
                         bos.write(baos.toByteArray());
                         bos.flush();
                         bos.close();
                         clientSocket.close();
                     } catch (IOException ex) {
                         // Do exception handling
+                        ex.printStackTrace();
                     }
                 }
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -258,12 +260,11 @@ public class Client extends Socket {
     }
 
     public static User loginSecure(String loginName, String loginPassword) {
-
         try {
             try {
                 String command = "SELECT * FROM user WHERE USER_NAME ='" + loginName + "'AND USER_PASSWORD = '" + loginPassword + "'";
                 transClickForLogin(command);
-                Socket s = new Socket("127.0.0.1",7809);
+                Socket s = new Socket(SERVER_IP,SERVER_PORT_FOR_LOGIN);
                 ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
                 User u=(User)ois.readObject();
                 return u;
@@ -278,16 +279,14 @@ public class Client extends Socket {
     }
 
     public static Vector[] getUserTable(){
-
         try {
             try {
                 String command = "SELECT * FROM user";
                 transClickForGetUserTable(command);
-                Socket s = new Socket("127.0.0.1",1578);
+                Socket s = new Socket(SERVER_IP,SERVER_PORT_FOR_GETUSERTABLE);
                 ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
                 Vector colHead = (Vector)ois.readObject();
                 Vector rows= (Vector)ois.readObject();
-
                 Vector[] res = new Vector[2];
                 res[0] = colHead;
                 res[1] = rows;
@@ -302,18 +301,14 @@ public class Client extends Socket {
     }
 
     public static Vector[] getDocTable(){
-
         try {
             try {
                 String command = "SELECT * FROM doc";
                 transClickForGetDocTable(command);
-                Socket s = new Socket("127.0.0.1",2001);
+                Socket s = new Socket(SERVER_IP,SERVER_PORT_FOR_GETDOCTABLE);
                 ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-
                 Vector colHead = (Vector)ois.readObject();
                 Vector rows= (Vector)ois.readObject();
-
-
                 Vector[] res = new Vector[2];
                 res[0] = colHead;
                 res[1] = rows;
@@ -361,8 +356,7 @@ public class Client extends Socket {
                 if(changedCellsCol.equals("USER_NAME")) {
                     String command = "UPDATE user SET USER_NAME = '" + changeInfo + "'WHERE USER_NAME = '" + name + "'";
                     transClickForChangeUserInfo(command);
-                }
-                else{
+                } else{
                     String command = "UPDATE user SET USER_PASSWORD = '" + changeInfo + "'WHERE USER_NAME = '" + name + "'";
                     transClickForChangeUserInfo(command);
                 }
@@ -373,7 +367,5 @@ public class Client extends Socket {
             e.printStackTrace();
         }
     }
-
-
 }
 

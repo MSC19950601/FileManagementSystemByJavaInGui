@@ -1,23 +1,10 @@
 package com.kururu.frame;
 
-import com.kururu.basement.DataProcessing;
-import com.kururu.database.MysqlDatabaseForUser;
 import com.kururu.netServer.Client;
-import javafx.scene.control.Cell;
-
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.Statement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.Vector;
 
 /**
@@ -48,11 +35,10 @@ public class AdministratorFrame extends JFrame {
 
     private ImageIcon AdminMainBackground;
 
-    public JScrollPane listScrollPane;
-    public TableModel AdminTableModel;
-    public JTable AdminJTableForUser;
+    private JScrollPane listScrollPane;
+    private JTable AdminJTableForUser;
 
-    public static int delRow,changeRow;
+    private static int delRow;
 
     public AdministratorFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -75,7 +61,7 @@ public class AdministratorFrame extends JFrame {
 
         AdminMainPanel.setLayout(null);
         AdminMainFrame.getLayeredPane().add(AdminMainPanelBackground,new Integer(Integer.MIN_VALUE));
-        AdminMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        AdminMainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         AdminMainFrame.setSize(AdminMainBackground.getIconWidth(), AdminMainBackground.getIconHeight());
 
         setMainMenu();
@@ -238,7 +224,6 @@ public class AdministratorFrame extends JFrame {
                             String changeInfo = dtm.getValueAt(changeRow, changeColumn).toString();
                             try {
                                 Client.changeUserInfo(originalInfo, changeInfo, changedCellsCol);
-                                //MysqlDatabaseForUser.updateUserForNameAndPassword(originalInfo, changeInfo, changedCellsCol);
                             } catch (Exception e1) {
                                 e1.printStackTrace();
                             }
@@ -249,7 +234,7 @@ public class AdministratorFrame extends JFrame {
                             String changeInfo = dtm.getValueAt(changeRow, changeColumn).toString();
                             try {
                                 String originalName = dtm.getValueAt(changeRow, changeColumn - 1).toString();
-                                MysqlDatabaseForUser.updateUserForNameAndPassword(originalName , changeInfo, changedCellsCol);
+                                Client.changeUserInfo(originalName, changeInfo, changedCellsCol);
                                 JOptionPane.showMessageDialog(null,
                                         "Change successfully!", "error",
                                         JOptionPane.INFORMATION_MESSAGE);
@@ -287,7 +272,6 @@ public class AdministratorFrame extends JFrame {
                     } else {
                         String delName = AdminJTableForUser.getValueAt(delRow, 0).toString();
                         try {
-                            //MysqlDatabaseForUser.deleteUser(delName);
                             Client.deleteUser(delName);
                         } catch (Exception e1) {
                             e1.printStackTrace();
@@ -354,7 +338,6 @@ class AddUserFrame extends JDialog{
             mainPanelOfAddUserBackground,
             nameLabelOfAddUser,
             passwordLabelOfAddUser;
-
 
     public JButton addButton,cancelButton;
 

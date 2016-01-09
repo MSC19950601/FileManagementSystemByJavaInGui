@@ -1,0 +1,11 @@
+This group was formed to share information and knowledge about linux administrator ( servers and networks )
+Regulation of this group:
+1. Any technical posts not related to Linux administration (including job offers/hunting) will be deleted without notice.
+2. All posts that include spam, commercial ads, porn, violence, gambling, will be deleted and the user will be banned permanently.
+3. Get used to perform "googling" first before asking.
+4. If you want to ask about the basics of Linux, there are other groups that discuss about it.
+5. If you want to ask about hacking, please go to the hacker group.
+6. If you are asking about linux networking and server configuration, please tell us, what have you done and what problems you encountered. Question without specific data, especially requests for assistance for installation and configuration from basic will be ignored by most members.
+7. Use polite words to ask and answer, do not provoke flamming in the group with harsh words and vilify others. Respect others, then others will respect you.
+8. We really appreciate someone who is willing to share knowledge and help others. It was what we expected in this group.
+9. Regarding Linux Administrator is an international group with members from various countries, the language used in this group MUST be in English.

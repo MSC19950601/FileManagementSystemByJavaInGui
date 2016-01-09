@@ -1,6 +1,5 @@
 package com.kururu.basement;
 import java.io.Serializable;
-import java.util.*;
 /**
  * Created by kururu on 2015/11/18.
  */
@@ -43,11 +42,7 @@ public class User implements Serializable {
         }
     }
 
-    public void getter(){
-        System.out.println(getName());
-        System.out.println(getPassword());
-        System.out.println(getRole());
-    }
+
 
     public User(String nameInput, String passwordInput, String roleInput){
         if(setter(nameInput,passwordInput,roleInput)){

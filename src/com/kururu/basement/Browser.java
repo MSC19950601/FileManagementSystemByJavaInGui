@@ -10,5 +10,4 @@ public class Browser extends User implements Serializable {
     public Browser(String nameInput, String passwordInput, String roleInput){
         super(nameInput,passwordInput,roleInput);
     }
-    
 }

@@ -1,47 +1,34 @@
 package com.kururu.frame;
 
-import com.kururu.database.MysqlDatabaseForDoc;
-import com.kururu.database.MysqlDatabaseForUser;
-
+import com.kururu.netServer.Client;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Created by kururu on 2015/12/4.
  */
 public class BrowserFrame extends JFrame{
-    public JFrame BrosMainFrame;
-    public JLabel BrosMainPanelBackground;
-    public JPanel BrosMainPanel;
-    public JMenuBar BrosMainMenu;
-    public JMenu
+    private JFrame BrosMainFrame;
+    private JLabel BrosMainPanelBackground;
+    private JPanel BrosMainPanel;
+    private JMenuBar BrosMainMenu;
+    private JMenu
             BrosFileMenu,
             BrosWorkMenu,
             BrosHelpMenu;
-    public JMenuItem
+    private JMenuItem
             BrosQuitItem,
             BrosServerItem,
             BrosAboutItem;
-
-    public JButton
+    private JButton
             downloadFileButton,
             showFileListButton;
-
-    public JScrollPane listScrollPane;
-    public JTable BroJTableForDoc;
-
-    public ImageIcon BrosMainBackground;
+    private JScrollPane listScrollPane;
+    private JTable BroJTableForDoc;
+    private ImageIcon BrosMainBackground;
 
     public BrowserFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -54,23 +41,18 @@ public class BrowserFrame extends JFrame{
 
     public void BrowserFrameMainInitial(){
         BrosMainFrame = new JFrame("Browser shell");
-
         BrosMainBackground = new ImageIcon("Icon/loginBackground.jpg");
         BrosMainPanelBackground = new JLabel(BrosMainBackground);
         BrosMainPanelBackground.setBounds(0,0,BrosMainBackground.getIconWidth(),BrosMainBackground.getIconHeight());
-
         BrosMainPanel = (JPanel)BrosMainFrame.getContentPane();
         BrosMainPanel.setOpaque(false);
-
         BrosMainPanel.setLayout(null);
         BrosMainFrame.getLayeredPane().add(BrosMainPanelBackground,new Integer(Integer.MIN_VALUE));
         BrosMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         BrosMainFrame.setSize(BrosMainBackground.getIconWidth(), BrosMainBackground.getIconHeight());
-
         setMainMenu();
         setTable();
         setButton();
-
         BrosMainFrame.setLocation(300, 300);
         BrosMainFrame.setResizable(false);
         BrosMainFrame.setVisible(true);
@@ -89,7 +71,6 @@ public class BrowserFrame extends JFrame{
 
     public void setFileMenu(){
         BrosFileMenu = new JMenu("file");
-
         BrosQuitItem = new JMenuItem("quit");
         BrosFileMenu.add(BrosQuitItem);
         BrosQuitItem.addActionListener(new ActionListener() {
@@ -120,7 +101,6 @@ public class BrowserFrame extends JFrame{
 
     public void setHelpMenu(){
         BrosHelpMenu = new JMenu("help");
-
         BrosAboutItem = new JMenuItem("about");
         BrosHelpMenu.add(BrosAboutItem);
         BrosAboutItem.addActionListener(new ActionListener() {
@@ -134,16 +114,15 @@ public class BrowserFrame extends JFrame{
     }
 
     public void setTable(){
-        Vector colHead = new Vector();
-        Vector rows = new Vector();
-        int count = 0;
-
-        MysqlDatabaseForDoc.getAllDocForAdmin(colHead, rows, count);
+        Vector colHead;
+        Vector rows;
+        Vector [] res = Client.getDocTable();
+        colHead = res[0];
+        rows = res[1];
         BroJTableForDoc = new JTable(rows,colHead);
         BroJTableForDoc.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         BroJTableForDoc.setRowHeight(BrosMainBackground.getIconHeight() / 15);
         BroJTableForDoc.setFont(new Font("Consolas", 0x0, 20));
-
         listScrollPane = new JScrollPane(BroJTableForDoc);
         listScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         listScrollPane.setBounds(
@@ -156,7 +135,6 @@ public class BrowserFrame extends JFrame{
     }
 
     public void setButton(){
-
         downloadFileButton = new JButton("downloadFile");
         downloadFileButton.setBounds(
                 BrosMainBackground.getIconWidth()/15,
@@ -164,7 +142,28 @@ public class BrowserFrame extends JFrame{
                 BrosMainBackground.getIconWidth()/5,
                 BrosMainBackground.getIconHeight()/15);
         downloadFileButton.setFont(new Font("Consolas", 1, 18));
-
+        downloadFileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String click = "download";
+                if(listScrollPane.isVisible()) {
+                    int selectedRow = BroJTableForDoc.getSelectedRow();
+                    if (selectedRow == -1) {
+                        JOptionPane.showMessageDialog(null,
+                                "No SelectedCell!", "error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }else {
+                        int selectedColumn = BroJTableForDoc.getSelectedColumn();
+                        String fileName = BroJTableForDoc.getValueAt(selectedRow,selectedColumn).toString();
+                        Client.download(fileName,click);
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null,
+                            "No List!", "error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
         showFileListButton = new JButton("showFileList");
         showFileListButton.setBounds(
@@ -182,7 +181,6 @@ public class BrowserFrame extends JFrame{
                 }
             }
         });
-
         BrosMainFrame.add(downloadFileButton);
         BrosMainFrame.add(showFileListButton);
     }
