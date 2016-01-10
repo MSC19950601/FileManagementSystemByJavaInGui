@@ -31,7 +31,8 @@ public class Client extends Socket {
             transClientForGetDocTable,
             transClientForAddUser,
             transClientForDeleteUser,
-            transClientForChangeUserInfo;
+            transClientForChangeUserInfo,
+            transClientForQuit;
 
     private static Socket keySocket;
     private static FileInputStream fis;
@@ -365,6 +366,21 @@ public class Client extends Socket {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void quit() throws IOException {
+        try {
+            transClientForQuit = new Socket(SERVER_IP, FINAL_PORT);
+            transClientForQuit.setSoTimeout(60000);
+            PrintWriter printWriter = new
+                    PrintWriter(transClientForQuit.getOutputStream(), true);
+            printWriter.println("quit");
+            printWriter.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            transClientForQuit.close();
         }
     }
 }

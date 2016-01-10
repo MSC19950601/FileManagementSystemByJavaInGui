@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -48,7 +49,7 @@ public class BrowserFrame extends JFrame{
         BrosMainPanel.setOpaque(false);
         BrosMainPanel.setLayout(null);
         BrosMainFrame.getLayeredPane().add(BrosMainPanelBackground,new Integer(Integer.MIN_VALUE));
-        BrosMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        BrosMainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         BrosMainFrame.setSize(BrosMainBackground.getIconWidth(), BrosMainBackground.getIconHeight());
         setMainMenu();
         setTable();
@@ -76,8 +77,14 @@ public class BrowserFrame extends JFrame{
         BrosQuitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getSource() == BrosQuitItem)
+                if(e.getSource() == BrosQuitItem) {
+                    try {
+                        Client.quit();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                     System.exit(0);
+                }
             }
         });
         BrosFileMenu.add(BrosQuitItem);
@@ -141,7 +148,7 @@ public class BrowserFrame extends JFrame{
                 BrosMainBackground.getIconHeight()/10 + BrosMainBackground.getIconHeight()/5,
                 BrosMainBackground.getIconWidth()/5,
                 BrosMainBackground.getIconHeight()/15);
-        downloadFileButton.setFont(new Font("Consolas", 1, 18));
+        downloadFileButton.setFont(new Font("Consolas", 0x1, 18));
         downloadFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -165,19 +172,20 @@ public class BrowserFrame extends JFrame{
             }
         });
 
-        showFileListButton = new JButton("showFileList");
+        showFileListButton = new JButton("refresh");
         showFileListButton.setBounds(
                 BrosMainBackground.getIconWidth()/15,
                 BrosMainBackground.getIconHeight()/10 + 2*BrosMainBackground.getIconHeight()/5,
                 BrosMainBackground.getIconWidth()/5,
                 BrosMainBackground.getIconHeight()/15);
-        showFileListButton.setFont(new Font("Consolas", 1, 18));
+        showFileListButton.setFont(new Font("Consolas", 0x1, 18));
         showFileListButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource() == showFileListButton){
-                    setTable();
                     listScrollPane.setVisible(true);
+                    setTable();
+
                 }
             }
         });

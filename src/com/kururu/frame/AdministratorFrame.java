@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -94,8 +95,14 @@ public class AdministratorFrame extends JFrame {
         AdminQuitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getSource() == AdminQuitItem)
+                if(e.getSource() == AdminQuitItem) {
+                    try {
+                        Client.quit();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                     System.exit(0);
+                }
             }
         });
         AdminFileMenu.add(AdminQuitItem);
@@ -132,10 +139,6 @@ public class AdministratorFrame extends JFrame {
         });
     }
 
-    public void setScrollPane(){
-
-    }
-
     public void setTable(){
 
         Vector colHead = new Vector();
@@ -154,9 +157,7 @@ public class AdministratorFrame extends JFrame {
         AdminJTableForUser.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         AdminJTableForUser.setRowHeight(AdminMainBackground.getIconHeight()/15);
         AdminJTableForUser.setFont(new Font("Consolas", 0x0, 20));
-
         listScrollPane = new JScrollPane(AdminJTableForUser);
-
         listScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         listScrollPane.setBounds(
                 AdminMainBackground.getIconWidth()/3,
@@ -168,39 +169,26 @@ public class AdministratorFrame extends JFrame {
 
         try{
             for(int i = 1; i < count ; i++){
-
                 TableColumn column = AdminJTableForUser.getColumnModel().getColumn(i);
                 column.setWidth(AdminMainBackground.getIconWidth() / 5);
-
                 DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
                 renderer.setHorizontalAlignment(SwingConstants.CENTER);
                 AdminJTableForUser.getColumn(i).setCellRenderer(renderer);
-                //column.setPreferredWidth(AdminMainBackground.getIconWidth()/5);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        /*AdminTableModel = new DefaultTableModel();
-
-        AdminJTableForUser = new JTable(AdminTableModel);*/
-
-        //listScrollPane.setViewportView(AdminJTableForUser);
-
     }
 
     public void setButton(){
 
         changeUserInfoButton = new JButton("changeUserInfo");
-        //changeUserInfoButton.setUI(new BasicButtonUI());
         changeUserInfoButton.setBounds(
                 AdminMainBackground.getIconWidth()/15,
                 AdminMainBackground.getIconHeight()/10,
                 AdminMainBackground.getIconWidth()/5,
                 AdminMainBackground.getIconHeight()/15);
-        //changeUserInfoButton.setContentAreaFilled(false);
         changeUserInfoButton.setFont(new Font("Consolas", 1, 18));
-        //changeUserInfoButton.setMargin(new Insets(0, 0, 0, 0));
         changeUserInfoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

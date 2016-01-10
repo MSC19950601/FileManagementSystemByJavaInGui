@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Vector;
 /**
  * Created by kururu on 2015/12/4.
@@ -27,8 +28,8 @@ public class OperatorFrame extends JFrame{
             uploadFileButton,
             downloadButton,
             showFileListButton;
-    private JScrollPane listScrollPane;
-    private JTable OpeJTableForDoc;
+    private static JScrollPane listScrollPane;
+    private static JTable OpeJTableForDoc;
     
     public OperatorFrame() {
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -76,8 +77,14 @@ public class OperatorFrame extends JFrame{
         OpeQuitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getSource() == OpeQuitItem)
+                if(e.getSource() == OpeQuitItem) {
+                    try {
+                        Client.quit();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                     System.exit(0);
+                }
             }
         });
         OpeFileMenu.add(OpeQuitItem);
@@ -128,7 +135,7 @@ public class OperatorFrame extends JFrame{
                 OpeMainBackground.getIconHeight()/10,
                 3*OpeMainBackground.getIconWidth()/5,
                 OpeMainBackground.getIconHeight()/10 + 4*OpeMainBackground.getIconHeight()/7);
-        listScrollPane.setVisible(false);
+        listScrollPane.setVisible(true);
         OpeMainFrame.add(listScrollPane);
     }
 
@@ -191,7 +198,7 @@ public class OperatorFrame extends JFrame{
                 }
             }
         });
-        showFileListButton = new JButton("showFileList");
+        showFileListButton = new JButton("refresh");
         showFileListButton.setBounds(
                 OpeMainBackground.getIconWidth()/15,
                 OpeMainBackground.getIconHeight()/10 + 2*OpeMainBackground.getIconHeight()/5,
@@ -202,11 +209,12 @@ public class OperatorFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource() == showFileListButton){
+                    listScrollPane.setVisible(false);
                     setTable();
-                    listScrollPane.setVisible(true);
                 }
             }
         });
+
         OpeMainFrame.add(uploadFileButton);
         OpeMainFrame.add(downloadButton);
         OpeMainFrame.add(showFileListButton);
