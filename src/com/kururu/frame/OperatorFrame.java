@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 /**
@@ -27,7 +28,8 @@ public class OperatorFrame extends JFrame{
     private JButton
             uploadFileButton,
             downloadButton,
-            showFileListButton;
+            showFileListButton,
+            originalUploadButton;
     private static JScrollPane listScrollPane;
     private static JTable OpeJTableForDoc;
     
@@ -215,8 +217,31 @@ public class OperatorFrame extends JFrame{
             }
         });
 
+        originalUploadButton = new JButton("originalUpload");
+        originalUploadButton.setBounds(
+                OpeMainBackground.getIconWidth()/15,
+                OpeMainBackground.getIconHeight()/10 + 3*OpeMainBackground.getIconHeight()/5,
+                OpeMainBackground.getIconWidth()/5,
+                OpeMainBackground.getIconHeight()/15
+        );
+        originalUploadButton.setFont(new Font("Consolas", 1, 18));
+        originalUploadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == originalUploadButton){
+                    JFileChooser fileChooser = new JFileChooser("./");
+                    fileChooser.setFileSelectionMode(0);
+                    fileChooser.showOpenDialog(null);
+                    File file = fileChooser.getSelectedFile();
+                    System.out.println(file.toString());
+                    Client.originalUpload(file.toString(),"upload");
+                }
+            }
+        });
+
         OpeMainFrame.add(uploadFileButton);
         OpeMainFrame.add(downloadButton);
         OpeMainFrame.add(showFileListButton);
+        OpeMainFrame.add(originalUploadButton);
     }
 }

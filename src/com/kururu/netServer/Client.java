@@ -217,6 +217,46 @@ public class Client extends Socket {
         }
     }
 
+    public static void originalUpload(String fileName, String click) {
+        try {
+            try {
+                transClickForUpload(click);
+                client = new Socket(SERVER_IP, SERVER_PORT_FOR_UPLOAD);
+                client.setSoTimeout(600000);
+                //向服务端传送文件
+                File file = new File(fileName);
+                fis = new FileInputStream(file);
+                dos = new DataOutputStream(client.getOutputStream());
+                //文件名和长度
+                dos.writeUTF(file.getName());
+                dos.flush();
+                dos.writeLong(file.length());
+                dos.flush();
+                //传输文件
+                byte[] sendBytes = new byte[1024];
+                int length = 0;
+                while ((length = fis.read(sendBytes, 0, sendBytes.length)) > 0) {
+                    dos.write(sendBytes, 0, length);
+                    dos.flush();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (fis != null)
+                    System.out.println("fis");
+                fis.close();
+                if (dos != null)
+                    System.out.println("dos");
+                dos.close();
+                if(client != null)
+                    System.out.println("cli");
+                client.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void download(String fileName, String click) {
         try {
             try {
